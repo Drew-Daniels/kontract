@@ -1,0 +1,41 @@
+# Gitleaks configuration for Kontract
+# This file configures gitleaks to scan for secrets in commits
+
+title = "Gitleaks Configuration for Kontract"
+
+# Extend the default gitleaks config
+[extend]
+useDefault = true
+
+# Allowlist for false positives
+[allowlist]
+description = "Allowlist for known safe patterns"
+regexes = [
+  '''example\.com''',
+  '''your-api-key-here''',
+  '''<your-.*>''',
+  '''REPLACE_ME''',
+  '''TODO:''',
+  '''FIXME:''',
+]
+
+paths = [
+  '''^\.gitleaks\.toml$''',
+  '''gitleaks\.toml$''',
+  '''(.*?)(jpg|gif|doc|pdf|bin|svg|socket)$''',
+  '''(go|python-)?sum\.lock$''',
+  '''node_modules/''',
+  '''dist/''',
+  '''build/''',
+  '''.nx/''',
+]
+
+# Stopwords to reduce false positives
+stopwords = [
+  "example",
+  "test",
+  "sample",
+  "dummy",
+  "mock",
+  "fake",
+]

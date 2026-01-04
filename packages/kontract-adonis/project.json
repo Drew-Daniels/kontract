@@ -1,0 +1,73 @@
+{
+  "name": "@kontract/adonis",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/kontract-adonis/src",
+  "projectType": "library",
+  "implicitDependencies": ["kontract", "@kontract/ajv"],
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["kontract:build", "@kontract/ajv:build"],
+      "inputs": [
+        "{projectRoot}/src/**/*",
+        "{projectRoot}/package.json",
+        "{projectRoot}/tsconfig.json"
+      ],
+      "outputs": ["{projectRoot}/dist"],
+      "options": {
+        "command": "npm run build",
+        "cwd": "packages/kontract-adonis"
+      }
+    },
+    "dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc --watch",
+        "cwd": "packages/kontract-adonis"
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["kontract:build", "@kontract/ajv:build"],
+      "inputs": [
+        "{projectRoot}/src/**/*",
+        "{projectRoot}/tests/**/*",
+        "{projectRoot}/package.json",
+        "{projectRoot}/tsconfig.json",
+        "{projectRoot}/tsconfig.test.json"
+      ],
+      "options": {
+        "command": "npm run test",
+        "cwd": "packages/kontract-adonis"
+      }
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "eslint src/",
+        "cwd": "packages/kontract-adonis"
+      }
+    },
+    "lint:fix": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "eslint src/ --fix",
+        "cwd": "packages/kontract-adonis"
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["kontract:build", "@kontract/ajv:build"],
+      "inputs": [
+        "{projectRoot}/src/**/*",
+        "{projectRoot}/package.json",
+        "{projectRoot}/tsconfig.json"
+      ],
+      "options": {
+        "command": "tsc --noEmit",
+        "cwd": "packages/kontract-adonis"
+      }
+    }
+  },
+  "tags": ["type:library", "framework:adonisjs", "scope:shared"]
+}

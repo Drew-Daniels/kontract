@@ -1,0 +1,73 @@
+{
+  "name": "@kontract/ajv",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/kontract-ajv/src",
+  "projectType": "library",
+  "implicitDependencies": ["kontract"],
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["kontract:build"],
+      "inputs": [
+        "{projectRoot}/src/**/*",
+        "{projectRoot}/package.json",
+        "{projectRoot}/tsconfig.json"
+      ],
+      "outputs": ["{projectRoot}/dist"],
+      "options": {
+        "command": "npm run build",
+        "cwd": "packages/kontract-ajv"
+      }
+    },
+    "dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc --watch",
+        "cwd": "packages/kontract-ajv"
+      }
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "eslint src/",
+        "cwd": "packages/kontract-ajv"
+      }
+    },
+    "lint:fix": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "eslint src/ --fix",
+        "cwd": "packages/kontract-ajv"
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["kontract:build"],
+      "inputs": [
+        "{projectRoot}/src/**/*",
+        "{projectRoot}/package.json",
+        "{projectRoot}/tsconfig.json"
+      ],
+      "options": {
+        "command": "tsc --noEmit",
+        "cwd": "packages/kontract-ajv"
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["kontract:build"],
+      "inputs": [
+        "{projectRoot}/src/**/*",
+        "{projectRoot}/tests/**/*",
+        "{projectRoot}/package.json",
+        "{projectRoot}/tsconfig.json",
+        "{projectRoot}/tsconfig.test.json"
+      ],
+      "options": {
+        "command": "npm run test",
+        "cwd": "packages/kontract-ajv"
+      }
+    }
+  },
+  "tags": ["type:library", "scope:shared"]
+}

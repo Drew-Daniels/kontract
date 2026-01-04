@@ -1,0 +1,20 @@
+export {
+  registerController,
+  registerControllers,
+  // Elysia-style route builders
+  get,
+  post,
+  put,
+  patch,
+  del,
+  noContent,
+  type RegisterControllerOptions,
+  type HonoHandlerContext,
+  type HonoRouteHandler,
+  type HonoRouteConfig,
+  type HonoRouteDefinition,
+  type GetRouteOptions,
+  type BodyRouteOptions,
+  type ReplyHelpers,
+  type ErrorHelpers,
+} from './endpoint-registrar.js'

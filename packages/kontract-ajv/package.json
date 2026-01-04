@@ -1,0 +1,56 @@
+{
+  "name": "@kontract/ajv",
+  "version": "0.1.0",
+  "description": "AJV-based validation for kontract",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src/",
+    "lint:fix": "eslint src/ --fix",
+    "clean": "rm -rf dist",
+    "test": "TSX_TSCONFIG_PATH=tsconfig.test.json node --import=tsx bin/test.ts"
+  },
+  "dependencies": {
+    "kontract": "*"
+  },
+  "peerDependencies": {
+    "@sinclair/typebox": ">=0.32.0",
+    "ajv": "^8.0.0",
+    "ajv-formats": "^3.0.0"
+  },
+  "devDependencies": {
+    "@japa/assert": "^4.2.0",
+    "@japa/runner": "^4.4.0",
+    "@sinclair/typebox": "^0.34.33",
+    "@types/node": "^22.15.21",
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1",
+    "tsx": "^4.19.0",
+    "typescript": "^5.8.3"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "keywords": [
+    "ajv",
+    "validation",
+    "openapi",
+    "typebox",
+    "json-schema"
+  ],
+  "license": "MIT"
+}

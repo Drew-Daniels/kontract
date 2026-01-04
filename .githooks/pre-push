@@ -1,0 +1,68 @@
+#!/bin/sh
+# Pre-push hook - runs tests before pushing
+# Prevents broken code from reaching the remote repository
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+echo "${BLUE}Running pre-push checks...${NC}"
+echo ""
+
+# Determine the base for affected commands
+# Use origin/main if it exists, otherwise run against all projects
+if git rev-parse --verify origin/main >/dev/null 2>&1; then
+  BASE_ARG="--base=origin/main"
+else
+  echo "${YELLOW}No origin/main found (first push?), running checks on all projects...${NC}"
+  BASE_ARG=""
+fi
+
+# Run type checking (disable Nx TUI and daemon for non-interactive hook context)
+echo "${YELLOW}Running type checks...${NC}"
+if [ -n "$BASE_ARG" ]; then
+  NX_TUI=false NX_DAEMON=false npx nx affected --target=typecheck --parallel $BASE_ARG --output-style=stream
+else
+  NX_TUI=false NX_DAEMON=false npx nx run-many --target=typecheck --parallel --output-style=stream
+fi
+
+TYPECHECK_EXIT_CODE=$?
+
+if [ $TYPECHECK_EXIT_CODE -ne 0 ]; then
+  echo ""
+  echo "${RED}Type checking failed${NC}"
+  echo ""
+  echo "Fix type errors before pushing."
+  echo "To bypass (not recommended): ${YELLOW}git push --no-verify${NC}"
+  exit 1
+fi
+
+echo ""
+echo "${GREEN}Type checking passed!${NC}"
+echo ""
+
+# Run tests (disable Nx TUI and daemon for non-interactive hook context)
+echo "${YELLOW}Running tests...${NC}"
+if [ -n "$BASE_ARG" ]; then
+  NX_TUI=false NX_DAEMON=false npx nx affected --target=test --parallel $BASE_ARG --output-style=stream
+else
+  NX_TUI=false NX_DAEMON=false npx nx run-many --target=test --parallel --output-style=stream
+fi
+
+TEST_EXIT_CODE=$?
+
+if [ $TEST_EXIT_CODE -ne 0 ]; then
+  echo ""
+  echo "${RED}Tests failed${NC}"
+  echo ""
+  echo "Fix failing tests before pushing."
+  echo "To bypass (not recommended): ${YELLOW}git push --no-verify${NC}"
+  exit 1
+fi
+
+echo ""
+echo "${GREEN}All pre-push checks passed!${NC}"
+exit 0

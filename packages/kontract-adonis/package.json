@@ -1,0 +1,87 @@
+{
+  "name": "@kontract/adonis",
+  "version": "0.1.0",
+  "description": "AdonisJS adapter for kontract",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./adapters": {
+      "types": "./dist/adapters/index.d.ts",
+      "import": "./dist/adapters/index.js"
+    },
+    "./serializers": {
+      "types": "./dist/serializers/index.d.ts",
+      "import": "./dist/serializers/index.js"
+    },
+    "./validation": {
+      "types": "./dist/validation/index.d.ts",
+      "import": "./dist/validation/index.js"
+    },
+    "./builder": {
+      "types": "./dist/builder/index.d.ts",
+      "import": "./dist/builder/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src/",
+    "lint:fix": "eslint src/ --fix",
+    "clean": "rm -rf dist",
+    "test": "TSX_TSCONFIG_PATH=tsconfig.test.json node --import=tsx bin/test.ts",
+    "demo": "node --import=tsx demo/bin/server.ts",
+    "demo:watch": "node --watch --import=tsx demo/bin/server.ts"
+  },
+  "dependencies": {
+    "kontract": "*",
+    "@kontract/ajv": "*"
+  },
+  "devDependencies": {
+    "@adonisjs/core": "^6.18.0",
+    "@adonisjs/lucid": "^21.6.0",
+    "@japa/api-client": "^3.0.0",
+    "@japa/assert": "^4.2.0",
+    "@japa/runner": "^4.4.0",
+    "@sinclair/typebox": "^0.34.33",
+    "@types/node": "^22.15.21",
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1",
+    "tsx": "^4.19.0",
+    "typescript": "^5.8.3"
+  },
+  "peerDependencies": {
+    "@adonisjs/core": "^6.0.0",
+    "@adonisjs/lucid": "^21.0.0",
+    "@sinclair/typebox": ">=0.32.0",
+    "ajv": "^8.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@adonisjs/lucid": {
+      "optional": true
+    },
+    "ajv": {
+      "optional": true
+    }
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "keywords": [
+    "adonisjs",
+    "openapi",
+    "swagger",
+    "decorators",
+    "typescript"
+  ],
+  "license": "MIT"
+}

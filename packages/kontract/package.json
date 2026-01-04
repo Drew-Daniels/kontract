@@ -1,0 +1,83 @@
+{
+  "name": "kontract",
+  "version": "0.1.0",
+  "description": "Framework-agnostic type-safe API contracts with TypeBox schema support",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./response": {
+      "types": "./dist/response/index.d.ts",
+      "import": "./dist/response/index.js"
+    },
+    "./metadata": {
+      "types": "./dist/metadata/index.d.ts",
+      "import": "./dist/metadata/index.js"
+    },
+    "./config": {
+      "types": "./dist/config/index.d.ts",
+      "import": "./dist/config/index.js"
+    },
+    "./errors": {
+      "types": "./dist/errors/index.d.ts",
+      "import": "./dist/errors/index.js"
+    },
+    "./validation": {
+      "types": "./dist/validation/index.d.ts",
+      "import": "./dist/validation/index.js"
+    },
+    "./runtime": {
+      "types": "./dist/runtime/index.d.ts",
+      "import": "./dist/runtime/index.js"
+    },
+    "./builder": {
+      "types": "./dist/builder/index.d.ts",
+      "import": "./dist/builder/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src/",
+    "lint:fix": "eslint src/ --fix",
+    "clean": "rm -rf dist",
+    "test": "TSX_TSCONFIG_PATH=tsconfig.test.json node --import=tsx bin/test.ts"
+  },
+  "dependencies": {
+    "@sinclair/typebox": "^0.34.33"
+  },
+  "devDependencies": {
+    "@japa/assert": "^4.2.0",
+    "@japa/runner": "^4.4.0",
+    "@types/node": "^22.15.21",
+    "tsx": "^4.19.0",
+    "typescript": "^5.8.3"
+  },
+  "peerDependencies": {
+    "@sinclair/typebox": ">=0.32.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "keywords": [
+    "openapi",
+    "swagger",
+    "typescript",
+    "typebox",
+    "api",
+    "rest",
+    "documentation",
+    "type-safe",
+    "contracts"
+  ],
+  "license": "MIT"
+}

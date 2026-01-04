@@ -1,0 +1,45 @@
+{
+  "name": "kontract-monorepo",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "prepare": "git config core.hooksPath .githooks",
+    "build": "nx run-many --target=build",
+    "dev": "nx run-many --target=dev",
+    "test": "nx run-many --target=test",
+    "lint": "nx run-many --target=lint",
+    "lint:fix": "nx run-many --target=lint:fix",
+    "typecheck": "nx run-many --target=typecheck",
+    "clean": "nx run-many --target=clean",
+    "docs:dev": "nx dev @kontract/docs",
+    "docs:build": "nx build @kontract/docs"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
+    "@cspell/eslint-plugin": "^9.0.0",
+    "@eslint/js": "^9.0.0",
+    "@stylistic/eslint-plugin": "^4.0.0",
+    "@types/node": "^22.15.21",
+    "eslint": "^9.0.0",
+    "globals": "^16.0.0",
+    "lint-staged": "^16.2.7",
+    "nx": "^20.8.0",
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.0.0"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx}": [
+      "eslint --fix"
+    ],
+    "*": [
+      "gitleaks protect --staged --verbose --redact --config=.gitleaks.toml --log-opts="
+    ]
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

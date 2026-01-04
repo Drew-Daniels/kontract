@@ -1,0 +1,32 @@
+{
+  "name": "@kontract/docs",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/kontract-docs",
+  "projectType": "library",
+  "targets": {
+    "dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "vitepress dev",
+        "cwd": "packages/kontract-docs"
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/.vitepress/dist"],
+      "options": {
+        "command": "vitepress build",
+        "cwd": "packages/kontract-docs"
+      }
+    },
+    "preview": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["build"],
+      "options": {
+        "command": "vitepress preview",
+        "cwd": "packages/kontract-docs"
+      }
+    }
+  },
+  "tags": ["type:docs", "scope:kontract"]
+}

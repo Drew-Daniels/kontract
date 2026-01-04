@@ -1,0 +1,69 @@
+{
+  "name": "kontract",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/kontract/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "inputs": [
+        "{projectRoot}/src/**/*",
+        "{projectRoot}/package.json",
+        "{projectRoot}/tsconfig.json"
+      ],
+      "outputs": ["{projectRoot}/dist"],
+      "options": {
+        "command": "npm run build",
+        "cwd": "packages/kontract"
+      }
+    },
+    "dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc --watch",
+        "cwd": "packages/kontract"
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "inputs": [
+        "{projectRoot}/src/**/*",
+        "{projectRoot}/tests/**/*",
+        "{projectRoot}/package.json",
+        "{projectRoot}/tsconfig.json",
+        "{projectRoot}/tsconfig.test.json"
+      ],
+      "options": {
+        "command": "npm run test",
+        "cwd": "packages/kontract"
+      }
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "eslint src/",
+        "cwd": "packages/kontract"
+      }
+    },
+    "lint:fix": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "eslint src/ --fix",
+        "cwd": "packages/kontract"
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "inputs": [
+        "{projectRoot}/src/**/*",
+        "{projectRoot}/package.json",
+        "{projectRoot}/tsconfig.json"
+      ],
+      "options": {
+        "command": "tsc --noEmit",
+        "cwd": "packages/kontract"
+      }
+    }
+  },
+  "tags": ["type:library", "scope:shared"]
+}

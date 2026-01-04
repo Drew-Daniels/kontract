@@ -1,0 +1,149 @@
+/**
+ * Kontract Documentation Theme
+ * A modern, developer-focused color scheme with blue-purple tones
+ */
+
+:root {
+  /* Brand colors */
+  --kontract-purple: #7c3aed;
+  --kontract-purple-light: #a78bfa;
+  --kontract-purple-dark: #5b21b6;
+  --kontract-blue: #3b82f6;
+  --kontract-blue-light: #60a5fa;
+  --kontract-cyan: #06b6d4;
+  --kontract-green: #10b981;
+  --kontract-yellow: #f59e0b;
+  --kontract-red: #ef4444;
+
+  /* Light mode */
+  --vp-c-brand-1: var(--kontract-purple);
+  --vp-c-brand-2: var(--kontract-purple-light);
+  --vp-c-brand-3: var(--kontract-purple-dark);
+  --vp-c-brand-soft: rgba(124, 58, 237, 0.14);
+
+  --vp-c-tip-1: var(--kontract-cyan);
+  --vp-c-tip-2: rgba(6, 182, 212, 0.16);
+  --vp-c-tip-3: rgba(6, 182, 212, 0.32);
+
+  --vp-c-warning-1: var(--kontract-yellow);
+  --vp-c-warning-2: rgba(245, 158, 11, 0.16);
+  --vp-c-warning-3: rgba(245, 158, 11, 0.32);
+
+  --vp-c-danger-1: var(--kontract-red);
+  --vp-c-danger-2: rgba(239, 68, 68, 0.16);
+  --vp-c-danger-3: rgba(239, 68, 68, 0.32);
+
+  /* Home page hero gradient */
+  --vp-home-hero-name-color: transparent;
+  --vp-home-hero-name-background: linear-gradient(
+    135deg,
+    var(--kontract-blue) 0%,
+    var(--kontract-purple) 50%,
+    var(--kontract-purple-light) 100%
+  );
+
+  --vp-home-hero-image-background-image: linear-gradient(
+    135deg,
+    rgba(124, 58, 237, 0.3) 0%,
+    rgba(59, 130, 246, 0.3) 100%
+  );
+  --vp-home-hero-image-filter: blur(44px);
+}
+
+.dark {
+  /* Dark mode adjustments */
+  --vp-c-brand-1: var(--kontract-purple-light);
+  --vp-c-brand-2: var(--kontract-purple);
+  --vp-c-brand-3: #c4b5fd;
+  --vp-c-brand-soft: rgba(167, 139, 250, 0.16);
+
+  --vp-home-hero-image-background-image: linear-gradient(
+    135deg,
+    rgba(167, 139, 250, 0.4) 0%,
+    rgba(96, 165, 250, 0.4) 100%
+  );
+}
+
+/* Code blocks */
+:root {
+  --vp-code-block-bg: #f8fafc;
+}
+
+.dark {
+  --vp-code-block-bg: #1e1e2e;
+}
+
+/* Custom container styling */
+.vp-doc .custom-block.tip {
+  border-color: var(--kontract-cyan);
+}
+
+.vp-doc .custom-block.warning {
+  border-color: var(--kontract-yellow);
+}
+
+.vp-doc .custom-block.danger {
+  border-color: var(--kontract-red);
+}
+
+.vp-doc .custom-block.info {
+  border-color: var(--kontract-blue);
+}
+
+/* Code highlighting enhancements */
+.vp-doc [class*='language-'] code {
+  font-family: 'JetBrains Mono', 'Fira Code', Menlo, Monaco, Consolas, monospace;
+}
+
+.vp-doc div[class*='language-'] {
+  border-radius: 8px;
+}
+
+/* Button styling */
+.VPButton.brand {
+  background: linear-gradient(135deg, var(--kontract-purple) 0%, var(--kontract-blue) 100%);
+  border: none;
+}
+
+.VPButton.brand:hover {
+  background: linear-gradient(135deg, var(--kontract-purple-dark) 0%, var(--kontract-purple) 100%);
+}
+
+/* Feature cards on home page */
+.VPFeature {
+  border-radius: 12px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.VPFeature:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(124, 58, 237, 0.15);
+}
+
+.dark .VPFeature:hover {
+  box-shadow: 0 8px 24px rgba(167, 139, 250, 0.2);
+}
+
+/* Sidebar active state */
+.VPSidebarItem.is-active > .item > .link > .text {
+  color: var(--kontract-purple);
+}
+
+.dark .VPSidebarItem.is-active > .item > .link > .text {
+  color: var(--kontract-purple-light);
+}
+
+/* Navigation brand styling */
+.VPNavBarTitle .title {
+  font-weight: 600;
+}
+
+/* Search input */
+.VPNavBarSearch .DocSearch-Button {
+  border-radius: 8px;
+}
+
+/* Footer */
+.VPFooter {
+  border-top: 1px solid var(--vp-c-divider);
+}

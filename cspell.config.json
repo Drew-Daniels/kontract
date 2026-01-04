@@ -1,0 +1,68 @@
+{
+  "version": "0.2",
+  "language": "en",
+  "import": [
+    "@cspell/dict-software-terms/cspell-ext.json",
+    "@cspell/dict-typescript/cspell-ext.json",
+    "@cspell/dict-node/cspell-ext.json",
+    "@cspell/dict-npm/cspell-ext.json",
+    "@cspell/dict-html/cspell-ext.json",
+    "@cspell/dict-css/cspell-ext.json",
+    "@cspell/dict-vue/cspell-ext.json",
+    "@cspell/dict-aws/cspell-ext.json",
+    "@cspell/dict-companies/cspell-ext.json"
+  ],
+  "dictionaries": [
+    "typescript",
+    "node",
+    "npm",
+    "html",
+    "css",
+    "vue",
+    "softwareTerms",
+    "aws",
+    "companies",
+    "project-terms"
+  ],
+  "dictionaryDefinitions": [
+    {
+      "name": "project-terms",
+      "path": "./project-dictionary.txt",
+      "description": "Project-specific terminology"
+    }
+  ],
+  "ignoreWords": [
+    "localhost",
+    "rgba",
+    "hsla"
+  ],
+  "flagWords": [],
+  "ignoreRegExpList": [
+    "/\\b[A-Fa-f0-9]{6,}\\b/g",
+    "/\\b[a-z]{2,3}_[A-Z]{2}\\b/g",
+    "/https?:\\/\\/[^\\s]+/g",
+    "/[\\w.+-]+@[\\w.-]+\\.[a-z]{2,}/gi",
+    "/#[A-Fa-f0-9]{3,8}\\b/g",
+    "/\\b(lorem|ipsum|dolor|sit|amet|consectetur|adipiscing|elit|sed|eiusmod|tempor|incididunt|labore|dolore|magna|aliqua|enim|minim|veniam|quis|nostrud|exercitation|ullamco|laboris|nisi|aliquip|commodo|consequat|duis|aute|irure|reprehenderit|voluptate|velit|esse|cillum|fugiat|nulla|pariatur|excepteur|sint|occaecat|cupidatat|proident|sunt|culpa|officia|deserunt|mollit|anim)\\b/gi"
+  ],
+  "allowCompoundWords": true,
+  "caseSensitive": false,
+  "minWordLength": 3,
+  "ignorePaths": [
+    "node_modules",
+    "dist",
+    "dev-dist",
+    "build",
+    ".nx",
+    "coverage",
+    "*.min.js",
+    "*.min.css",
+    "package-lock.json",
+    "**/*.snap",
+    "**/generated/**",
+    "storybook-static",
+    ".vitepress",
+    "tmp",
+    "uploads"
+  ]
+}

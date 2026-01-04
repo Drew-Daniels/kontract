@@ -1,0 +1,30 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+*.tsbuildinfo
+
+# Nx
+.nx/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test
+coverage/
+
+# VitePress
+packages/kontract-docs/.vitepress/cache/
+packages/kontract-docs/.vitepress/dist/
+
+# Logs
+*.log
+npm-debug.log*
