@@ -90,10 +90,10 @@ export const usersController = defineController(
 
 | Package | Description |
 |---------|-------------|
-| [`kontract`](/api/kontract) | Core library with schemas and response helpers |
-| [`@kontract/ajv`](/api/kontract-ajv) | AJV-based validation for request/response schemas |
-| [`@kontract/client`](/api/kontract-client) | Type-safe HTTP client generated from your contracts |
 | [`@kontract/adonis`](/adapters/adonis) | AdonisJS v6 adapter with Lucid ORM support |
 | [`@kontract/express`](/adapters/express) | Express.js adapter |
 | [`@kontract/fastify`](/adapters/fastify) | Fastify adapter with native validation |
 | [`@kontract/hono`](/adapters/hono) | Hono adapter for edge runtimes |
+| [`@kontract/ajv`](/api/kontract-ajv) | AJV-based validation (used by Express, Hono, AdonisJS) |
+
+For generating type-safe API clients, see [Client Generation](/api/client-generation).

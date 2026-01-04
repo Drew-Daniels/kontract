@@ -20,6 +20,10 @@ npm install @kontract/fastify @sinclair/typebox
 npm install @kontract/hono @sinclair/typebox
 ```
 
+```bash [Koa]
+npm install @kontract/koa @sinclair/typebox koa @koa/router koa-bodyparser
+```
+
 ```bash [AdonisJS]
 npm install @kontract/adonis @sinclair/typebox
 ```
@@ -193,6 +197,69 @@ export const usersController = defineController(
 // controllers/users.ts
 import { Type } from '@sinclair/typebox'
 import { get, post, del, defineController } from '@kontract/express'
+import { User, CreateUserRequest } from '../schemas/user.js'
+
+export const usersController = defineController(
+  { tag: 'Users', prefix: '/api/users' },
+  {
+    listUsers: get('/',
+      async ({ reply }) => {
+        const users = await userService.findAll()
+        return reply.ok(users)
+      },
+      {
+        summary: 'List all users',
+        responses: { 200: { schema: Type.Array(User) } },
+      }
+    ),
+
+    getUser: get('/:id',
+      async ({ params, reply }) => {
+        const user = await userService.find(params.id)
+        if (!user) return reply.notFound('User not found')
+        return reply.ok(user)
+      },
+      {
+        summary: 'Get a user by ID',
+        params: Type.Object({ id: Type.String() }),
+        responses: { 200: { schema: User }, 404: null },
+      }
+    ),
+
+    createUser: post('/',
+      async ({ body, reply }) => {
+        const user = await userService.create(body)
+        return reply.created(user)
+      },
+      {
+        summary: 'Create a new user',
+        auth: 'required',
+        body: CreateUserRequest,
+        responses: { 201: { schema: User }, 422: null },
+      }
+    ),
+
+    deleteUser: del('/:id',
+      async ({ params, reply }) => {
+        const deleted = await userService.delete(params.id)
+        if (!deleted) return reply.notFound('User not found')
+        return reply.noContent()
+      },
+      {
+        summary: 'Delete a user',
+        auth: 'required',
+        params: Type.Object({ id: Type.String() }),
+        responses: { 204: null, 404: null },
+      }
+    ),
+  }
+)
+```
+
+```typescript [Koa]
+// controllers/users.ts
+import { Type } from '@sinclair/typebox'
+import { get, post, del, defineController } from '@kontract/koa'
 import { User, CreateUserRequest } from '../schemas/user.js'
 
 export const usersController = defineController(

@@ -72,6 +72,7 @@ export default defineConfig({
             { text: 'Express', link: '/adapters/express' },
             { text: 'Fastify', link: '/adapters/fastify' },
             { text: 'Hono', link: '/adapters/hono' },
+            { text: 'Koa', link: '/adapters/koa' },
             { text: 'AdonisJS', link: '/adapters/adonis' },
           ],
         },
@@ -81,9 +82,13 @@ export default defineConfig({
           text: 'API Reference',
           items: [
             { text: 'Overview', link: '/api/' },
-            { text: 'kontract', link: '/api/kontract' },
             { text: '@kontract/ajv', link: '/api/kontract-ajv' },
-            { text: '@kontract/client', link: '/api/kontract-client' },
+          ],
+        },
+        {
+          text: 'Client Generation',
+          items: [
+            { text: 'Overview', link: '/api/client-generation' },
           ],
         },
       ],

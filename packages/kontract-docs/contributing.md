@@ -44,7 +44,6 @@ packages/
 ├── @kontract/express/   # Express adapter
 ├── @kontract/fastify/   # Fastify adapter
 ├── @kontract/hono/      # Hono adapter
-├── @kontract/client/    # HTTP client
 └── kontract-docs/      # Documentation (this site)
 ```
 

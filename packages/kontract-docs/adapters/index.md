@@ -9,6 +9,7 @@ Kontract's core library is framework-agnostic. Adapters bridge the gap between y
 | [@kontract/express](/adapters/express) | Express.js | @kontract/ajv (included) | Existing Express projects, maximum ecosystem |
 | [@kontract/fastify](/adapters/fastify) | Fastify | Native TypeBox | Maximum performance |
 | [@kontract/hono](/adapters/hono) | Hono | @kontract/ajv (included) | Edge runtimes, serverless |
+| [@kontract/koa](/adapters/koa) | Koa | @kontract/ajv (included) | Modern async/await middleware |
 | [@kontract/adonis](/adapters/adonis) | AdonisJS v6 | @kontract/ajv (included) | Full-stack Node.js apps with Lucid ORM |
 
 ## Choosing an Adapter
@@ -44,6 +45,17 @@ Lightweight and edge-ready:
 
 ```bash
 npm install @kontract/hono @sinclair/typebox hono
+```
+
+### Koa
+
+Modern middleware with async/await:
+- Clean context-based API
+- Lightweight core
+- Express successor by the same team
+
+```bash
+npm install @kontract/koa @sinclair/typebox koa @koa/router koa-bodyparser
 ```
 
 ### AdonisJS
@@ -97,11 +109,11 @@ registerControllers(app, [usersController, postsController])
 
 ## Validation Comparison
 
-| Feature | Express | Fastify | Hono | AdonisJS |
-|---------|---------|---------|------|----------|
-| Validation package | @kontract/ajv (included) | Native | @kontract/ajv (included) | @kontract/ajv (included) |
-| Type coercion | Yes | Yes | Yes | Yes |
-| Response serialization | JSON.stringify | fast-json-stringify | JSON.stringify | JSON.stringify |
+| Feature | Express | Fastify | Hono | Koa | AdonisJS |
+|---------|---------|---------|------|-----|----------|
+| Validation package | @kontract/ajv (included) | Native | @kontract/ajv (included) | @kontract/ajv (included) | @kontract/ajv (included) |
+| Type coercion | Yes | Yes | Yes | Yes | Yes |
+| Response serialization | JSON.stringify | fast-json-stringify | JSON.stringify | JSON.stringify | JSON.stringify |
 
 ## Authentication
 
@@ -169,4 +181,5 @@ Choose your adapter and follow the detailed guide:
 - [Express Adapter](/adapters/express) - Middleware setup
 - [Fastify Adapter](/adapters/fastify) - Performance optimizations
 - [Hono Adapter](/adapters/hono) - Edge deployment
+- [Koa Adapter](/adapters/koa) - Modern async/await middleware
 - [AdonisJS Adapter](/adapters/adonis) - Full integration guide

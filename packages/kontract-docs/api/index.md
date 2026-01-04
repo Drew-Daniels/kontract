@@ -6,28 +6,15 @@ This section provides comprehensive API documentation for all Kontract packages.
 
 | Package | Description |
 |---------|-------------|
-| [kontract](/api/kontract) | Core library with response helpers and OpenAPI generation |
 | [@kontract/ajv](/api/kontract-ajv) | AJV-based validation for TypeBox schemas |
-| [@kontract/client](/api/kontract-client) | Type-safe HTTP client for consuming Kontract APIs |
+
+See [Client Generation](/api/client-generation) for generating type-safe API clients from your OpenAPI specs.
 
 ## Quick Reference
 
-### Core Imports
-
-```typescript
-// Response helpers
-import { ok, created, noContent, apiError, binary } from 'kontract'
-
-// Configuration
-import { defineConfig, getConfig } from 'kontract'
-
-// TypeBox (re-exported)
-import { Type } from 'kontract'
-```
-
 ### Adapter Imports
 
-Each adapter provides route helpers and registration functions:
+Each adapter re-exports everything you need from the core `kontract` package:
 
 ```typescript
 // Hono
@@ -66,12 +53,6 @@ import {
   createAjvValidator,
   AjvValidationError,
 } from '@kontract/ajv'
-```
-
-### Client Imports
-
-```typescript
-import { createClient } from '@kontract/client'
 ```
 
 ## Type Reference

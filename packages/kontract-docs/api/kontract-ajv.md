@@ -1,6 +1,6 @@
 # @kontract/ajv
 
-AJV-based validation package for TypeBox schemas. Used by Express and Hono adapters.
+AJV-based validation package for TypeBox schemas. Used by Express, Hono, and AdonisJS adapters.
 
 ## Installation
 
