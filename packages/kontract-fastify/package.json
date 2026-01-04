@@ -48,5 +48,33 @@
     "fastify": "^5.2.0",
     "tsx": "^4.19.0",
     "typescript": "^5.8.3"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "keywords": [
+    "fastify",
+    "openapi",
+    "swagger",
+    "typescript",
+    "typebox"
+  ],
+  "author": "Drew Daniels",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Drew-Daniels/kontract.git",
+    "directory": "packages/kontract-fastify"
+  },
+  "homepage": "https://github.com/Drew-Daniels/kontract#readme",
+  "bugs": {
+    "url": "https://github.com/Drew-Daniels/kontract/issues"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

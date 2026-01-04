@@ -52,5 +52,18 @@
     "typebox",
     "json-schema"
   ],
-  "license": "MIT"
+  "author": "Drew Daniels",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Drew-Daniels/kontract.git",
+    "directory": "packages/kontract-ajv"
+  },
+  "homepage": "https://github.com/Drew-Daniels/kontract#readme",
+  "bugs": {
+    "url": "https://github.com/Drew-Daniels/kontract/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
 }

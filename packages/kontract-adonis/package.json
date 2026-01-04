@@ -14,10 +14,6 @@
       "types": "./dist/adapters/index.d.ts",
       "import": "./dist/adapters/index.js"
     },
-    "./serializers": {
-      "types": "./dist/serializers/index.d.ts",
-      "import": "./dist/serializers/index.js"
-    },
     "./validation": {
       "types": "./dist/validation/index.d.ts",
       "import": "./dist/validation/index.js"
@@ -83,5 +79,18 @@
     "decorators",
     "typescript"
   ],
-  "license": "MIT"
+  "author": "Drew Daniels",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Drew-Daniels/kontract.git",
+    "directory": "packages/kontract-adonis"
+  },
+  "homepage": "https://github.com/Drew-Daniels/kontract#readme",
+  "bugs": {
+    "url": "https://github.com/Drew-Daniels/kontract/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
 }
