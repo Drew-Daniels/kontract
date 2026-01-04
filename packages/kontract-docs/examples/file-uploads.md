@@ -39,6 +39,24 @@ export const usersController = defineController(
   { tag: 'Users', prefix: '/api/v1/users' },
   {
     uploadAvatar: post('/:id/avatar',
+      {
+        summary: 'Upload user avatar',
+        description: 'Upload a new avatar image for the user',
+        auth: 'required',
+        params: UserParams,
+        file: {
+          fieldName: 'avatar',
+          description: 'Avatar image file',
+          allowedExtensions: ['jpg', 'jpeg', 'png', 'webp', 'gif'],
+          maxSize: '5MB',
+          multiple: false,
+        },
+        responses: {
+          200: { schema: User, description: 'User with updated avatar' },
+          400: { schema: null, description: 'Invalid file type or size' },
+          404: { schema: null, description: 'User not found' },
+        },
+      },
       async ({ params, file, user, reply }) => {
         // Validate user exists
         const targetUser = await findUser(params.id)
@@ -65,28 +83,16 @@ export const usersController = defineController(
         // Update user
         const updated = await updateUser(params.id, { avatarUrl })
         return reply.ok(updated)
-      },
-      {
-        summary: 'Upload user avatar',
-        description: 'Upload a new avatar image for the user',
-        auth: 'required',
-        params: UserParams,
-        file: {
-          fieldName: 'avatar',
-          description: 'Avatar image file',
-          allowedExtensions: ['jpg', 'jpeg', 'png', 'webp', 'gif'],
-          maxSize: '5MB',
-          multiple: false,
-        },
-        responses: {
-          200: { schema: User, description: 'User with updated avatar' },
-          400: { schema: null, description: 'Invalid file type or size' },
-          404: { schema: null, description: 'User not found' },
-        },
       }
     ),
 
     deleteAvatar: del('/:id/avatar',
+      {
+        summary: 'Delete user avatar',
+        auth: 'required',
+        params: UserParams,
+        responses: { 200: { schema: User }, 404: null },
+      },
       async ({ params, user, reply }) => {
         const targetUser = await findUser(params.id)
         if (!targetUser) {
@@ -103,16 +109,15 @@ export const usersController = defineController(
 
         const updated = await updateUser(params.id, { avatarUrl: null })
         return reply.ok(updated)
-      },
-      {
-        summary: 'Delete user avatar',
-        auth: 'required',
-        params: UserParams,
-        responses: { 200: { schema: User }, 404: null },
       }
     ),
 
     getAvatar: get('/:id/avatar',
+      {
+        summary: 'Get user avatar',
+        params: UserParams,
+        responses: { 200: null, 404: null },  // Binary response
+      },
       async ({ params, reply }) => {
         const user = await findUser(params.id)
         if (!user || !user.avatarUrl) {
@@ -121,11 +126,6 @@ export const usersController = defineController(
 
         const file = await storageService.get(user.avatarUrl)
         return reply.binary(file.contentType, file.data, 'avatar.jpg')
-      },
-      {
-        summary: 'Get user avatar',
-        params: UserParams,
-        responses: { 200: null, 404: null },  // Binary response
       }
     ),
   }
@@ -136,20 +136,6 @@ export const usersController = defineController(
 
 ```typescript
 const uploadGallery = post('/:id/gallery',
-  async ({ params, files, reply }) => {
-    const uploads = await Promise.all(
-      files.map(file => storageService.upload(file, {
-        folder: `gallery/${params.id}`,
-      }))
-    )
-
-    return reply.ok(uploads.map(u => ({
-      url: u.url,
-      filename: u.filename,
-      size: u.size,
-      contentType: u.contentType,
-    })))
-  },
   {
     summary: 'Upload multiple images to gallery',
     auth: 'required',
@@ -165,6 +151,20 @@ const uploadGallery = post('/:id/gallery',
       200: { schema: Type.Array(UploadResponse) },
       400: null,
     },
+  },
+  async ({ params, files, reply }) => {
+    const uploads = await Promise.all(
+      files.map(file => storageService.upload(file, {
+        folder: `gallery/${params.id}`,
+      }))
+    )
+
+    return reply.ok(uploads.map(u => ({
+      url: u.url,
+      filename: u.filename,
+      size: u.size,
+      contentType: u.contentType,
+    })))
   }
 )
 ```
@@ -183,6 +183,20 @@ const DocumentMetadata = Type.Object({
 })
 
 const uploadDocument = post('/documents',
+  {
+    summary: 'Upload a document with metadata',
+    auth: 'required',
+    body: DocumentMetadata,  // Additional form fields
+    file: {
+      fieldName: 'document',
+      allowedExtensions: ['pdf', 'doc', 'docx'],
+      maxSize: '50MB',
+    },
+    responses: {
+      201: { schema: Document },
+      400: null,
+    },
+  },
   async ({ body, file, user, reply }) => {
     const url = await storageService.upload(file, {
       folder: `documents/${user.id}`,
@@ -197,20 +211,6 @@ const uploadDocument = post('/documents',
     })
 
     return reply.created(document)
-  },
-  {
-    summary: 'Upload a document with metadata',
-    auth: 'required',
-    body: DocumentMetadata,  // Additional form fields
-    file: {
-      fieldName: 'document',
-      allowedExtensions: ['pdf', 'doc', 'docx'],
-      maxSize: '50MB',
-    },
-    responses: {
-      201: { schema: Document },
-      400: null,
-    },
   }
 )
 ```

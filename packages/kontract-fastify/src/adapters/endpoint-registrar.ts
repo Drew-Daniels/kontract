@@ -201,24 +201,24 @@ export type BodyRouteOptions<
  * @example
  * ```typescript
  * const listUsers = get('/api/v1/users',
- *   async ({ query, reply }) => {
- *     const users = await User.findAll({ page: query.page })
- *     return reply.list(users)
- *   },
  *   {
  *     summary: 'List users',
  *     query: UserQueryParams,
  *     responses: { 200: { schema: UserListResponse } },
+ *   },
+ *   async ({ query, reply }) => {
+ *     const users = await User.findAll({ page: query.page })
+ *     return reply.list(users)
  *   }
  * )
  *
  * // Path params inferred automatically
  * const getUser = get('/api/v1/users/:id',
+ *   { responses: { 200: { schema: UserResponse } } },
  *   async ({ params, reply }) => {
  *     const user = await User.find(params.id) // params.id is typed!
  *     return reply.ok(user)
- *   },
- *   { responses: { 200: { schema: UserResponse } } }
+ *   }
  * )
  * ```
  */
@@ -229,8 +229,8 @@ export function get<
   TResponses extends ResponsesConfig = ResponsesConfig,
 >(
   path: TPath,
-  handler: FastifyRouteHandler<TPath, undefined, TQuery, TParams, TResponses>,
   options: GetRouteOptions<TQuery, TParams, TResponses>,
+  handler: FastifyRouteHandler<TPath, undefined, TQuery, TParams, TResponses>,
 ): FastifyRouteDefinition<TPath, undefined, TQuery, TParams> {
   return defineFastifyRoute<TPath, undefined, TQuery, TParams, TResponses>(
     { ...options, route: `GET ${path}` } as FastifyRouteConfig<undefined, TQuery, TParams, TResponses>,
@@ -246,10 +246,6 @@ export function get<
  * @example
  * ```typescript
  * const createUser = post('/api/v1/users',
- *   async ({ body, reply }) => {
- *     const user = await User.create(body)
- *     return reply.created(user)
- *   },
  *   {
  *     summary: 'Create a user',
  *     body: CreateUserRequest,
@@ -257,6 +253,10 @@ export function get<
  *       201: { schema: UserResponse },
  *       400: { schema: ApiError },
  *     },
+ *   },
+ *   async ({ body, reply }) => {
+ *     const user = await User.create(body)
+ *     return reply.created(user)
  *   }
  * )
  * ```
@@ -269,8 +269,8 @@ export function post<
   TResponses extends ResponsesConfig = ResponsesConfig,
 >(
   path: TPath,
-  handler: FastifyRouteHandler<TPath, TBody, TQuery, TParams, TResponses>,
   options: BodyRouteOptions<TBody, TQuery, TParams, TResponses>,
+  handler: FastifyRouteHandler<TPath, TBody, TQuery, TParams, TResponses>,
 ): FastifyRouteDefinition<TPath, TBody, TQuery, TParams> {
   return defineFastifyRoute<TPath, TBody, TQuery, TParams, TResponses>(
     { ...options, route: `POST ${path}` } as FastifyRouteConfig<TBody, TQuery, TParams, TResponses>,
@@ -286,17 +286,17 @@ export function post<
  * @example
  * ```typescript
  * const updateUser = put('/api/v1/users/:id',
- *   async ({ params, body, reply }) => {
- *     const user = await User.findById(params.id) // params.id is typed!
- *     Object.assign(user, body)
- *     await user.save()
- *     return reply.ok(user)
- *   },
  *   {
  *     summary: 'Update a user',
  *     // params: IdParams, // Optional - inferred from path!
  *     body: UpdateUserRequest,
  *     responses: { 200: { schema: UserResponse } },
+ *   },
+ *   async ({ params, body, reply }) => {
+ *     const user = await User.findById(params.id) // params.id is typed!
+ *     Object.assign(user, body)
+ *     await user.save()
+ *     return reply.ok(user)
  *   }
  * )
  * ```
@@ -309,8 +309,8 @@ export function put<
   TResponses extends ResponsesConfig = ResponsesConfig,
 >(
   path: TPath,
-  handler: FastifyRouteHandler<TPath, TBody, TQuery, TParams, TResponses>,
   options: BodyRouteOptions<TBody, TQuery, TParams, TResponses>,
+  handler: FastifyRouteHandler<TPath, TBody, TQuery, TParams, TResponses>,
 ): FastifyRouteDefinition<TPath, TBody, TQuery, TParams> {
   return defineFastifyRoute<TPath, TBody, TQuery, TParams, TResponses>(
     { ...options, route: `PUT ${path}` } as FastifyRouteConfig<TBody, TQuery, TParams, TResponses>,
@@ -326,17 +326,17 @@ export function put<
  * @example
  * ```typescript
  * const patchUser = patch('/api/v1/users/:id',
- *   async ({ params, body, reply }) => {
- *     const user = await User.findById(params.id) // params.id is typed!
- *     Object.assign(user, body)
- *     await user.save()
- *     return reply.ok(user)
- *   },
  *   {
  *     summary: 'Partially update a user',
  *     // params: IdParams, // Optional - inferred from path!
  *     body: PatchUserRequest,
  *     responses: { 200: { schema: UserResponse } },
+ *   },
+ *   async ({ params, body, reply }) => {
+ *     const user = await User.findById(params.id) // params.id is typed!
+ *     Object.assign(user, body)
+ *     await user.save()
+ *     return reply.ok(user)
  *   }
  * )
  * ```
@@ -349,8 +349,8 @@ export function patch<
   TResponses extends ResponsesConfig = ResponsesConfig,
 >(
   path: TPath,
-  handler: FastifyRouteHandler<TPath, TBody, TQuery, TParams, TResponses>,
   options: BodyRouteOptions<TBody, TQuery, TParams, TResponses>,
+  handler: FastifyRouteHandler<TPath, TBody, TQuery, TParams, TResponses>,
 ): FastifyRouteDefinition<TPath, TBody, TQuery, TParams> {
   return defineFastifyRoute<TPath, TBody, TQuery, TParams, TResponses>(
     { ...options, route: `PATCH ${path}` } as FastifyRouteConfig<TBody, TQuery, TParams, TResponses>,
@@ -366,15 +366,15 @@ export function patch<
  * @example
  * ```typescript
  * const deleteUser = del('/api/v1/users/:id',
- *   async ({ params, reply }) => {
- *     const user = await User.findById(params.id) // params.id is typed!
- *     await user.delete()
- *     return reply.noContent()
- *   },
  *   {
  *     summary: 'Delete a user',
  *     // params: IdParams, // Optional - inferred from path!
  *     responses: { 204: null },
+ *   },
+ *   async ({ params, reply }) => {
+ *     const user = await User.findById(params.id) // params.id is typed!
+ *     await user.delete()
+ *     return reply.noContent()
  *   }
  * )
  * ```
@@ -386,8 +386,8 @@ export function del<
   TResponses extends ResponsesConfig = ResponsesConfig,
 >(
   path: TPath,
-  handler: FastifyRouteHandler<TPath, undefined, TQuery, TParams, TResponses>,
   options: GetRouteOptions<TQuery, TParams, TResponses>,
+  handler: FastifyRouteHandler<TPath, undefined, TQuery, TParams, TResponses>,
 ): FastifyRouteDefinition<TPath, undefined, TQuery, TParams> {
   return defineFastifyRoute<TPath, undefined, TQuery, TParams, TResponses>(
     { ...options, route: `DELETE ${path}` } as FastifyRouteConfig<undefined, TQuery, TParams, TResponses>,

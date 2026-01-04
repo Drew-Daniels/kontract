@@ -17,8 +17,8 @@ test.group('defineController', () => {
       description: 'User management',
     }, {
       list: get('/users',
-        async ({ reply }) => reply.ok({ id: '1', name: 'Test' }),
         { responses: { 200: { schema: UserSchema } } },
+        async ({ reply }) => reply.ok({ id: '1', name: 'Test' }),
       ),
     })
 
@@ -32,12 +32,12 @@ test.group('defineController', () => {
       tag: 'Users',
     }, {
       list: get('/users',
-        async ({ reply }) => reply.ok({ id: '1', name: 'Test' }),
         { responses: { 200: { schema: UserSchema } } },
+        async ({ reply }) => reply.ok({ id: '1', name: 'Test' }),
       ),
       create: post('/users',
-        async ({ reply }) => reply.created({ id: '1', name: 'Test' }),
         { body: Type.Object({ name: Type.String() }), responses: { 201: { schema: UserSchema } } },
+        async ({ reply }) => reply.created({ id: '1', name: 'Test' }),
       ),
     })
 
@@ -51,8 +51,8 @@ test.group('defineController', () => {
       prefix: '/api/v1',
     }, {
       health: get('/health',
-        async ({ reply }) => reply.ok({ id: '1', name: 'Test' }),
         { responses: { 200: { schema: UserSchema } } },
+        async ({ reply }) => reply.ok({ id: '1', name: 'Test' }),
       ),
     })
 
@@ -64,8 +64,8 @@ test.group('defineController', () => {
       tag: 'Test',
     }, {
       list: get('/items',
-        async ({ reply }) => reply.ok({ id: '1', name: 'Test' }),
         { responses: { 200: { schema: UserSchema } } },
+        async ({ reply }) => reply.ok({ id: '1', name: 'Test' }),
       ),
     })
 

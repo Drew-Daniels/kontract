@@ -98,6 +98,12 @@ export const booksController = defineController(
   },
   {
     listBooks: get('/',
+      {
+        summary: 'List all books',
+        description: 'Returns a paginated list of books with optional filtering',
+        query: ListBooksQuery,
+        responses: { 200: { schema: BookListResponse } },
+      },
       async ({ query, reply }) => {
         let results = Array.from(books.values())
 
@@ -132,23 +138,10 @@ export const booksController = defineController(
           data,
           meta: { total, page, limit, totalPages },
         })
-      },
-      {
-        summary: 'List all books',
-        description: 'Returns a paginated list of books with optional filtering',
-        query: ListBooksQuery,
-        responses: { 200: { schema: BookListResponse } },
       }
     ),
 
     getBook: get('/:id',
-      async ({ params, reply }) => {
-        const book = books.get(params.id)
-        if (!book) {
-          return reply.notFound('Book not found')
-        }
-        return reply.ok(book)
-      },
       {
         summary: 'Get a book by ID',
         params: BookParams,
@@ -156,10 +149,27 @@ export const booksController = defineController(
           200: { schema: Book, description: 'The requested book' },
           404: { schema: null, description: 'Book not found' },
         },
+      },
+      async ({ params, reply }) => {
+        const book = books.get(params.id)
+        if (!book) {
+          return reply.notFound('Book not found')
+        }
+        return reply.ok(book)
       }
     ),
 
     createBook: post('/',
+      {
+        summary: 'Create a new book',
+        auth: 'required',
+        body: CreateBookRequest,
+        responses: {
+          201: { schema: Book, description: 'Book created successfully' },
+          409: { schema: null, description: 'Book with ISBN already exists' },
+          422: { schema: null, description: 'Validation error' },
+        },
+      },
       async ({ body, reply }) => {
         // Check for duplicate ISBN
         const existing = Array.from(books.values()).find(b => b.isbn === body.isbn)
@@ -177,20 +187,21 @@ export const booksController = defineController(
 
         books.set(book.id, book)
         return reply.created(book)
-      },
-      {
-        summary: 'Create a new book',
-        auth: 'required',
-        body: CreateBookRequest,
-        responses: {
-          201: { schema: Book, description: 'Book created successfully' },
-          409: { schema: null, description: 'Book with ISBN already exists' },
-          422: { schema: null, description: 'Validation error' },
-        },
       }
     ),
 
     updateBook: patch('/:id',
+      {
+        summary: 'Update a book',
+        auth: 'required',
+        params: BookParams,
+        body: UpdateBookRequest,
+        responses: {
+          200: { schema: Book, description: 'Book updated successfully' },
+          404: { schema: null, description: 'Book not found' },
+          409: { schema: null, description: 'ISBN conflict' },
+        },
+      },
       async ({ params, body, reply }) => {
         const book = books.get(params.id)
         if (!book) {
@@ -213,29 +224,10 @@ export const booksController = defineController(
 
         books.set(params.id, updated)
         return reply.ok(updated)
-      },
-      {
-        summary: 'Update a book',
-        auth: 'required',
-        params: BookParams,
-        body: UpdateBookRequest,
-        responses: {
-          200: { schema: Book, description: 'Book updated successfully' },
-          404: { schema: null, description: 'Book not found' },
-          409: { schema: null, description: 'ISBN conflict' },
-        },
       }
     ),
 
     deleteBook: del('/:id',
-      async ({ params, reply }) => {
-        if (!books.has(params.id)) {
-          return reply.notFound('Book not found')
-        }
-
-        books.delete(params.id)
-        return reply.noContent()
-      },
       {
         summary: 'Delete a book',
         auth: 'required',
@@ -244,6 +236,14 @@ export const booksController = defineController(
           204: { schema: null, description: 'Book deleted' },
           404: { schema: null, description: 'Book not found' },
         },
+      },
+      async ({ params, reply }) => {
+        if (!books.has(params.id)) {
+          return reply.notFound('Book not found')
+        }
+
+        books.delete(params.id)
+        return reply.noContent()
       }
     ),
   }

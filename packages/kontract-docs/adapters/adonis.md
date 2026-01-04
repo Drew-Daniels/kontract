@@ -35,26 +35,26 @@ export const booksController = defineController(
   { tag: 'Books', description: 'Book management', prefix: '/api/v1/books' },
   {
     listBooks: get('/',
-      async ({ reply }) => {
-        const books = await Book.all()
-        return reply.ok(books.map(b => b.serialize()))
-      },
       {
         summary: 'List all books',
         responses: { 200: { schema: Type.Array(BookSchema) } },
+      },
+      async ({ reply }) => {
+        const books = await Book.all()
+        return reply.ok(books.map(b => b.serialize()))
       }
     ),
 
     createBook: post('/',
-      async ({ body, reply }) => {
-        const book = await Book.create(body)
-        return reply.created(book.serialize())
-      },
       {
         summary: 'Create a book',
         auth: 'required',
         body: CreateBookRequest,
         responses: { 201: { schema: BookSchema }, 422: null },
+      },
+      async ({ body, reply }) => {
+        const book = await Book.create(body)
+        return reply.created(book.serialize())
       }
     ),
   }
@@ -121,6 +121,11 @@ export const usersController = defineController(
   { tag: 'Users', prefix: '/api/v1/users' },
   {
     listUsers: get('/',
+      {
+        summary: 'List users',
+        query: PaginationQuery,
+        responses: { 200: { schema: PaginatedUsers } },
+      },
       async ({ query, reply }) => {
         const users = await User.query().paginate(query.page, query.limit)
         return reply.ok({
@@ -132,52 +137,47 @@ export const usersController = defineController(
             lastPage: users.lastPage,
           },
         })
-      },
-      {
-        summary: 'List users',
-        query: PaginationQuery,
-        responses: { 200: { schema: PaginatedUsers } },
       }
     ),
 
     // Path params like :id are automatically inferred as strings
     getUser: get('/:id',
+      {
+        summary: 'Get user by ID',
+        responses: { 200: { schema: User }, 404: null },
+      },
       async ({ params, reply }) => {
         const user = await User.find(params.id)  // params.id is typed
         if (!user) return reply.notFound('User not found')
         return reply.ok(user.serialize())
-      },
-      {
-        summary: 'Get user by ID',
-        responses: { 200: { schema: User }, 404: null },
       }
     ),
 
     createUser: post('/',
-      async ({ body, reply }) => {
-        const user = await User.create(body)
-        return reply.created(user.serialize())
-      },
       {
         summary: 'Create user',
         auth: 'required',
         body: CreateUser,
         responses: { 201: { schema: User }, 422: null },
+      },
+      async ({ body, reply }) => {
+        const user = await User.create(body)
+        return reply.created(user.serialize())
       }
     ),
 
     deleteUser: del('/:id',
-      async ({ params, reply }) => {
-        const user = await User.find(params.id)
-        if (!user) return reply.notFound()
-        await user.delete()
-        return reply.noContent()
-      },
       {
         summary: 'Delete user',
         auth: 'required',
         params: Type.Object({ id: Type.String() }),
         responses: { 204: null, 404: null },
+      },
+      async ({ params, reply }) => {
+        const user = await User.find(params.id)
+        if (!user) return reply.notFound()
+        await user.delete()
+        return reply.noContent()
       }
     ),
   }
@@ -225,12 +225,12 @@ Then use it in your handlers:
 
 ```typescript
 const getUser = get('/:id',
+  { responses: { 200: { schema: UserSchema }, 404: null } },
   async ({ params, reply, error }) => {
     const user = await User.find(params.id)
     if (!user) return error.notFound()
     return reply.ok(user.toResponse())
-  },
-  { responses: { 200: { schema: UserSchema }, 404: null } }
+  }
 )
 ```
 
@@ -242,12 +242,12 @@ For quick fixes, use type assertions:
 import { Static } from '@sinclair/typebox'
 
 const getUser = get('/:id',
+  { responses: { 200: { schema: UserSchema }, 404: null } },
   async ({ params, reply, error }) => {
     const user = await User.find(params.id)
     if (!user) return error.notFound()
     return reply.ok(user.serialize() as Static<typeof UserSchema>)
-  },
-  { responses: { 200: { schema: UserSchema }, 404: null } }
+  }
 )
 ```
 
@@ -264,15 +264,15 @@ Routes with `auth: 'required'` require authentication:
 
 ```typescript
 const createBook = post('/',
-  async ({ body, user, reply }) => {
-    // user is available when auth is required
-    const book = await user.related('books').create(body)
-    return reply.created(book.toResponse())
-  },
   {
     auth: 'required',
     body: CreateBookRequest,
     responses: { 201: { schema: BookSchema } },
+  },
+  async ({ body, user, reply }) => {
+    // user is available when auth is required
+    const book = await user.related('books').create(body)
+    return reply.created(book.toResponse())
   }
 )
 ```
@@ -286,6 +286,11 @@ The handler receives a fully-typed context:
 ```typescript
 // Path params like :id are automatically inferred
 const updateUser = patch('/:id',
+  {
+    query: Type.Object({ notify: Type.Optional(Type.Boolean()) }),
+    body: UpdateUserRequest,
+    responses: { 200: { schema: User } },
+  },
   async ({ params, query, body, user, reply, ctx }) => {
     // params.id - auto-inferred as string from path
     // query - validated query parameters (typed)
@@ -295,11 +300,6 @@ const updateUser = patch('/:id',
     // ctx - original AdonisJS HttpContext
 
     return reply.ok(updatedUser)
-  },
-  {
-    query: Type.Object({ notify: Type.Optional(Type.Boolean()) }),
-    body: UpdateUserRequest,
-    responses: { 200: { schema: User } },
   }
 )
 ```
@@ -383,51 +383,51 @@ export const usersController = defineController(
   { tag: 'Users', prefix: '/api/v1/users' },
   {
     listUsers: get('/',
-      async ({ reply }) => {
-        const users = await userService.findAll()
-        return reply.ok(users)
-      },
       {
         summary: 'List users',
         responses: { 200: { schema: Type.Array(UserSchema) } },
+      },
+      async ({ reply }) => {
+        const users = await userService.findAll()
+        return reply.ok(users)
       }
     ),
 
     getUser: get('/:id',
+      {
+        summary: 'Get user by ID',
+        responses: { 200: { schema: UserSchema }, 404: null },
+      },
       async ({ params, reply }) => {
         const user = await userService.find(params.id)  // params.id auto-inferred
         if (!user) return reply.notFound('User not found')
         return reply.ok(user)
-      },
-      {
-        summary: 'Get user by ID',
-        responses: { 200: { schema: UserSchema }, 404: null },
       }
     ),
 
     createUser: post('/',
-      async ({ body, reply }) => {
-        const user = await userService.create(body)
-        return reply.created(user)
-      },
       {
         summary: 'Create user',
         auth: 'required',
         body: CreateUser,
         responses: { 201: { schema: UserSchema }, 422: null },
+      },
+      async ({ body, reply }) => {
+        const user = await userService.create(body)
+        return reply.created(user)
       }
     ),
 
     deleteUser: del('/:id',
-      async ({ params, reply }) => {
-        const deleted = await userService.delete(params.id)
-        if (!deleted) return reply.notFound()
-        return reply.noContent()
-      },
       {
         summary: 'Delete user',
         auth: 'required',
         responses: { 204: null, 404: null },
+      },
+      async ({ params, reply }) => {
+        const deleted = await userService.delete(params.id)
+        if (!deleted) return reply.notFound()
+        return reply.noContent()
       }
     ),
   }

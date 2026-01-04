@@ -246,14 +246,14 @@ export type BodyRouteOptions<
  * @example
  * ```typescript
  * const listUsers = get('/api/v1/users',
- *   async ({ query, reply }) => {
- *     const users = await User.findAll({ page: query.page })
- *     return reply.list(users)
- *   },
  *   {
  *     summary: 'List users',
  *     query: UserQueryParams,
  *     responses: { 200: { schema: UserListResponse } },
+ *   },
+ *   async ({ query, reply }) => {
+ *     const users = await User.findAll({ page: query.page })
+ *     return reply.list(users)
  *   }
  * )
  * ```
@@ -265,8 +265,8 @@ export function get<
   TResponses extends ResponsesConfig = ResponsesConfig,
 >(
   path: TPath,
-  handler: HonoRouteHandler<TPath, undefined, TQuery, TParams, TResponses>,
   options: GetRouteOptions<TQuery, TParams, TResponses>,
+  handler: HonoRouteHandler<TPath, undefined, TQuery, TParams, TResponses>,
 ): HonoRouteDefinition<TPath, undefined, TQuery, TParams> {
   return defineHonoRoute<TPath, undefined, TQuery, TParams, TResponses>(
     { ...options, route: `GET ${path}` } as HonoRouteConfig<undefined, TQuery, TParams, TResponses>,
@@ -280,10 +280,6 @@ export function get<
  * @example
  * ```typescript
  * const createUser = post('/api/v1/users',
- *   async ({ body, reply }) => {
- *     const user = await User.create(body)
- *     return reply.created(user)
- *   },
  *   {
  *     summary: 'Create a user',
  *     body: CreateUserRequest,
@@ -291,6 +287,10 @@ export function get<
  *       201: { schema: UserResponse },
  *       400: { schema: ApiError },
  *     },
+ *   },
+ *   async ({ body, reply }) => {
+ *     const user = await User.create(body)
+ *     return reply.created(user)
  *   }
  * )
  * ```
@@ -303,8 +303,8 @@ export function post<
   TResponses extends ResponsesConfig = ResponsesConfig,
 >(
   path: TPath,
-  handler: HonoRouteHandler<TPath, TBody, TQuery, TParams, TResponses>,
   options: BodyRouteOptions<TBody, TQuery, TParams, TResponses>,
+  handler: HonoRouteHandler<TPath, TBody, TQuery, TParams, TResponses>,
 ): HonoRouteDefinition<TPath, TBody, TQuery, TParams> {
   return defineHonoRoute<TPath, TBody, TQuery, TParams, TResponses>(
     { ...options, route: `POST ${path}` } as HonoRouteConfig<TBody, TQuery, TParams, TResponses>,
@@ -318,17 +318,17 @@ export function post<
  * @example
  * ```typescript
  * const updateUser = put('/api/v1/users/:id',
- *   async ({ params, body, reply }) => {
- *     const user = await User.findById(params.id)
- *     Object.assign(user, body)
- *     await user.save()
- *     return reply.ok(user)
- *   },
  *   {
  *     summary: 'Update a user',
  *     params: IdParams,
  *     body: UpdateUserRequest,
  *     responses: { 200: { schema: UserResponse } },
+ *   },
+ *   async ({ params, body, reply }) => {
+ *     const user = await User.findById(params.id)
+ *     Object.assign(user, body)
+ *     await user.save()
+ *     return reply.ok(user)
  *   }
  * )
  * ```
@@ -341,8 +341,8 @@ export function put<
   TResponses extends ResponsesConfig = ResponsesConfig,
 >(
   path: TPath,
-  handler: HonoRouteHandler<TPath, TBody, TQuery, TParams, TResponses>,
   options: BodyRouteOptions<TBody, TQuery, TParams, TResponses>,
+  handler: HonoRouteHandler<TPath, TBody, TQuery, TParams, TResponses>,
 ): HonoRouteDefinition<TPath, TBody, TQuery, TParams> {
   return defineHonoRoute<TPath, TBody, TQuery, TParams, TResponses>(
     { ...options, route: `PUT ${path}` } as HonoRouteConfig<TBody, TQuery, TParams, TResponses>,
@@ -356,17 +356,17 @@ export function put<
  * @example
  * ```typescript
  * const patchUser = patch('/api/v1/users/:id',
- *   async ({ params, body, reply }) => {
- *     const user = await User.findById(params.id)
- *     Object.assign(user, body)
- *     await user.save()
- *     return reply.ok(user)
- *   },
  *   {
  *     summary: 'Partially update a user',
  *     params: IdParams,
  *     body: PatchUserRequest,
  *     responses: { 200: { schema: UserResponse } },
+ *   },
+ *   async ({ params, body, reply }) => {
+ *     const user = await User.findById(params.id)
+ *     Object.assign(user, body)
+ *     await user.save()
+ *     return reply.ok(user)
  *   }
  * )
  * ```
@@ -379,8 +379,8 @@ export function patch<
   TResponses extends ResponsesConfig = ResponsesConfig,
 >(
   path: TPath,
-  handler: HonoRouteHandler<TPath, TBody, TQuery, TParams, TResponses>,
   options: BodyRouteOptions<TBody, TQuery, TParams, TResponses>,
+  handler: HonoRouteHandler<TPath, TBody, TQuery, TParams, TResponses>,
 ): HonoRouteDefinition<TPath, TBody, TQuery, TParams> {
   return defineHonoRoute<TPath, TBody, TQuery, TParams, TResponses>(
     { ...options, route: `PATCH ${path}` } as HonoRouteConfig<TBody, TQuery, TParams, TResponses>,
@@ -394,15 +394,15 @@ export function patch<
  * @example
  * ```typescript
  * const deleteUser = del('/api/v1/users/:id',
- *   async ({ params, reply }) => {
- *     const user = await User.findById(params.id)
- *     await user.delete()
- *     return reply.noContent()
- *   },
  *   {
  *     summary: 'Delete a user',
  *     params: IdParams,
  *     responses: { 204: null },
+ *   },
+ *   async ({ params, reply }) => {
+ *     const user = await User.findById(params.id)
+ *     await user.delete()
+ *     return reply.noContent()
  *   }
  * )
  * ```
@@ -414,8 +414,8 @@ export function del<
   TResponses extends ResponsesConfig = ResponsesConfig,
 >(
   path: TPath,
-  handler: HonoRouteHandler<TPath, undefined, TQuery, TParams, TResponses>,
   options: GetRouteOptions<TQuery, TParams, TResponses>,
+  handler: HonoRouteHandler<TPath, undefined, TQuery, TParams, TResponses>,
 ): HonoRouteDefinition<TPath, undefined, TQuery, TParams> {
   return defineHonoRoute<TPath, undefined, TQuery, TParams, TResponses>(
     { ...options, route: `DELETE ${path}` } as HonoRouteConfig<undefined, TQuery, TParams, TResponses>,

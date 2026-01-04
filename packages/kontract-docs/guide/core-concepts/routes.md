@@ -15,10 +15,6 @@ import { get, post, put, patch, del, defineController } from '@kontract/hono'
 
 ```typescript
 const listUsers = get('/api/v1/users',
-  async ({ query, reply }) => {
-    const users = await User.findAll({ page: query.page })
-    return reply.ok(users)
-  },
   {
     summary: 'List users',
     query: Type.Object({
@@ -26,6 +22,10 @@ const listUsers = get('/api/v1/users',
       limit: Type.Optional(Type.Integer({ minimum: 1, maximum: 100, default: 20 })),
     }),
     responses: { 200: { schema: Type.Array(User) } },
+  },
+  async ({ query, reply }) => {
+    const users = await User.findAll({ page: query.page })
+    return reply.ok(users)
   }
 )
 ```
@@ -34,10 +34,6 @@ const listUsers = get('/api/v1/users',
 
 ```typescript
 const createUser = post('/api/v1/users',
-  async ({ body, reply }) => {
-    const user = await User.create(body)
-    return reply.created(user)
-  },
   {
     summary: 'Create a user',
     auth: 'required',
@@ -46,6 +42,10 @@ const createUser = post('/api/v1/users',
       201: { schema: User },
       422: null,
     },
+  },
+  async ({ body, reply }) => {
+    const user = await User.create(body)
+    return reply.created(user)
   }
 )
 ```
@@ -55,13 +55,6 @@ const createUser = post('/api/v1/users',
 ```typescript
 // Path params like :id are automatically inferred as strings
 const updateUser = patch('/api/v1/users/:id',
-  async ({ params, body, reply }) => {
-    const user = await User.findById(params.id)  // params.id is typed as string
-    if (!user) return reply.notFound()
-    Object.assign(user, body)
-    await user.save()
-    return reply.ok(user)
-  },
   {
     summary: 'Update a user',
     auth: 'required',
@@ -70,6 +63,13 @@ const updateUser = patch('/api/v1/users/:id',
       200: { schema: User },
       404: null,
     },
+  },
+  async ({ params, body, reply }) => {
+    const user = await User.findById(params.id)  // params.id is typed as string
+    if (!user) return reply.notFound()
+    Object.assign(user, body)
+    await user.save()
+    return reply.ok(user)
   }
 )
 ```
@@ -78,12 +78,6 @@ const updateUser = patch('/api/v1/users/:id',
 
 ```typescript
 const deleteUser = del('/api/v1/users/:id',
-  async ({ params, reply }) => {
-    const user = await User.findById(params.id)
-    if (!user) return reply.notFound()
-    await user.delete()
-    return reply.noContent()
-  },
   {
     summary: 'Delete a user',
     auth: 'required',
@@ -91,6 +85,12 @@ const deleteUser = del('/api/v1/users/:id',
       204: null,
       404: null,
     },
+  },
+  async ({ params, reply }) => {
+    const user = await User.findById(params.id)
+    if (!user) return reply.notFound()
+    await user.delete()
+    return reply.noContent()
   }
 )
 ```
@@ -100,14 +100,14 @@ const deleteUser = del('/api/v1/users/:id',
 All method helpers follow the same pattern:
 
 ```typescript
-method(path, handler, options)
+method(path, options, handler)
 ```
 
 | Argument | Type | Description |
 |----------|------|-------------|
 | `path` | `string` | URL path with optional `:param` placeholders |
-| `handler` | `function` | Async function that handles the request |
 | `options` | `object` | Route configuration and schemas |
+| `handler` | `function` | Async function that handles the request |
 
 ## Route Options
 
@@ -130,13 +130,13 @@ Path parameters are automatically inferred from your route path:
 ```typescript
 // params.id and params.commentId are automatically typed as string
 const getComment = get('/posts/:id/comments/:commentId',
+  {
+    responses: { 200: { schema: CommentSchema } },
+  },
   async ({ params, reply }) => {
     // TypeScript knows: params.id: string, params.commentId: string
     const comment = await Comment.find(params.id, params.commentId)
     return reply.ok(comment)
-  },
-  {
-    responses: { 200: { schema: CommentSchema } },
   }
 )
 ```
@@ -148,29 +148,28 @@ Use explicit `params` when you need:
 1. **Format validation** (UUID, email, etc.):
 ```typescript
 get('/users/:id',
-  handler,
   {
     params: Type.Object({ id: Type.String({ format: 'uuid' }) }),
     responses: { 200: { schema: User } },
-  }
+  },
+  handler
 )
 ```
 
 2. **Numeric parameters**:
 ```typescript
 get('/posts/:page',
-  handler,
   {
     params: Type.Object({ page: Type.Integer({ minimum: 1 }) }),
     responses: { 200: { schema: PostList } },
-  }
+  },
+  handler
 )
 ```
 
 3. **OpenAPI documentation** (descriptions, examples):
 ```typescript
 get('/books/:isbn',
-  handler,
   {
     params: Type.Object({
       isbn: Type.String({
@@ -179,7 +178,8 @@ get('/books/:isbn',
       }),
     }),
     responses: { 200: { schema: Book } },
-  }
+  },
+  handler
 )
 ```
 
@@ -189,6 +189,7 @@ The handler receives a fully-typed context object:
 
 ```typescript
 const updateUser = patch('/api/v1/users/:id',
+  { /* options */ },
   async ({ params, query, body, user, reply }) => {
     // All types are automatically inferred:
     // params.id   - string (from params schema)
@@ -198,8 +199,7 @@ const updateUser = patch('/api/v1/users/:id',
     // reply       - type-safe response helpers
 
     return reply.ok(data)
-  },
-  { /* options */ }
+  }
 )
 ```
 
@@ -334,67 +334,67 @@ export const usersController = defineController(
   },
   {
     listUsers: get('/',
-      async ({ query, reply }) => {
-        const users = await userService.findAll(query.page, query.limit)
-        return reply.ok(users)
-      },
       {
         summary: 'List all users',
         query: PaginationQuery,
         responses: { 200: { schema: Type.Array(User) } },
+      },
+      async ({ query, reply }) => {
+        const users = await userService.findAll(query.page, query.limit)
+        return reply.ok(users)
       }
     ),
 
     // Path params are automatically inferred - no need for explicit params schema
     getUser: get('/:id',
+      {
+        summary: 'Get user by ID',
+        responses: { 200: { schema: User }, 404: null },
+      },
       async ({ params, reply }) => {
         const user = await userService.find(params.id)  // params.id: string
         if (!user) return reply.notFound('User not found')
         return reply.ok(user)
-      },
-      {
-        summary: 'Get user by ID',
-        responses: { 200: { schema: User }, 404: null },
       }
     ),
 
     createUser: post('/',
-      async ({ body, reply }) => {
-        const user = await userService.create(body)
-        return reply.created(user)
-      },
       {
         summary: 'Create a new user',
         auth: 'required',
         body: CreateUser,
         responses: { 201: { schema: User }, 422: null },
+      },
+      async ({ body, reply }) => {
+        const user = await userService.create(body)
+        return reply.created(user)
       }
     ),
 
     updateUser: patch('/:id',
-      async ({ params, body, reply }) => {
-        const user = await userService.update(params.id, body)
-        if (!user) return reply.notFound()
-        return reply.ok(user)
-      },
       {
         summary: 'Update a user',
         auth: 'required',
         body: UpdateUser,
         responses: { 200: { schema: User }, 404: null },
+      },
+      async ({ params, body, reply }) => {
+        const user = await userService.update(params.id, body)
+        if (!user) return reply.notFound()
+        return reply.ok(user)
       }
     ),
 
     deleteUser: del('/:id',
-      async ({ params, reply }) => {
-        const deleted = await userService.delete(params.id)
-        if (!deleted) return reply.notFound()
-        return reply.noContent()
-      },
       {
         summary: 'Delete a user',
         auth: 'required',
         responses: { 204: null, 404: null },
+      },
+      async ({ params, reply }) => {
+        const deleted = await userService.delete(params.id)
+        if (!deleted) return reply.notFound()
+        return reply.noContent()
       }
     ),
   }

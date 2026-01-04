@@ -50,10 +50,6 @@ export const usersController = defineController(
   { tag: 'Users', prefix: '/api/v1' },
   {
     listUsers: get('/users',
-      async ({ query, reply }) => {
-        const users = await userService.findAll(query.page, query.limit)
-        return reply.ok(users)
-      },
       {
         summary: 'List users',
         query: Type.Object({
@@ -61,19 +57,23 @@ export const usersController = defineController(
           limit: Type.Optional(Type.Integer({ minimum: 1, maximum: 100, default: 20 })),
         }),
         responses: { 200: { schema: Type.Array(User) } },
+      },
+      async ({ query, reply }) => {
+        const users = await userService.findAll(query.page, query.limit)
+        return reply.ok(users)
       }
     ),
 
     getUser: get('/users/:id',
-      async ({ params, reply }) => {
-        const user = await userService.find(params.id)
-        if (!user) return reply.notFound('User not found')
-        return reply.ok(user)
-      },
       {
         summary: 'Get user by ID',
         params: Type.Object({ id: Type.String({ format: 'uuid' }) }),
         responses: { 200: { schema: User }, 404: null },
+      },
+      async ({ params, reply }) => {
+        const user = await userService.find(params.id)
+        if (!user) return reply.notFound('User not found')
+        return reply.ok(user)
       }
     ),
   }
@@ -127,10 +127,6 @@ export const usersController = defineController(
   { tag: 'Users', description: 'User management', prefix: '/api/v1/users' },
   {
     listUsers: get('/',
-      async ({ query, reply }) => {
-        const users = await userService.findAll(query.page, query.limit)
-        return reply.ok(users)
-      },
       {
         summary: 'List users',
         query: Type.Object({
@@ -138,45 +134,49 @@ export const usersController = defineController(
           limit: Type.Optional(Type.Integer({ minimum: 1, maximum: 100, default: 20 })),
         }),
         responses: { 200: { schema: Type.Array(User) } },
+      },
+      async ({ query, reply }) => {
+        const users = await userService.findAll(query.page, query.limit)
+        return reply.ok(users)
       }
     ),
 
     getUser: get('/:id',
-      async ({ params, reply }) => {
-        const user = await findUser(params.id)
-        if (!user) return reply.notFound('User not found')
-        return reply.ok(user)
-      },
       {
         summary: 'Get user by ID',
         params: Type.Object({ id: Type.String({ format: 'uuid' }) }),
         responses: { 200: { schema: User }, 404: null },
+      },
+      async ({ params, reply }) => {
+        const user = await findUser(params.id)
+        if (!user) return reply.notFound('User not found')
+        return reply.ok(user)
       }
     ),
 
     createUser: post('/',
-      async ({ body, reply }) => {
-        const user = await userService.create(body)
-        return reply.created(user)
-      },
       {
         summary: 'Create a user',
         auth: 'required',
         body: CreateUser,
         responses: { 201: { schema: User }, 422: null },
+      },
+      async ({ body, reply }) => {
+        const user = await userService.create(body)
+        return reply.created(user)
       }
     ),
 
     deleteUser: del('/:id',
-      async ({ params, reply }) => {
-        await userService.delete(params.id)
-        return reply.noContent()
-      },
       {
         summary: 'Delete a user',
         auth: 'required',
         params: Type.Object({ id: Type.String({ format: 'uuid' }) }),
         responses: { 204: null },
+      },
+      async ({ params, reply }) => {
+        await userService.delete(params.id)
+        return reply.noContent()
       }
     ),
   }
@@ -189,11 +189,14 @@ Your TypeBox schemas are passed directly to Fastify's route schema option:
 
 ```typescript
 // Your route definition
-const createUser = post('/users', handler, {
-  body: CreateUser,
-  query: PaginationQuery,
-  responses: { 201: { schema: User } },
-})
+const createUser = post('/users',
+  {
+    body: CreateUser,
+    query: PaginationQuery,
+    responses: { 201: { schema: User } },
+  },
+  handler
+)
 
 // Registers as:
 fastify.route({
@@ -276,6 +279,11 @@ The handler receives a fully-typed context:
 ```typescript
 // Path params like :id are automatically inferred
 const updateUser = patch('/users/:id',
+  {
+    query: Type.Object({ notify: Type.Optional(Type.Boolean()) }),
+    body: UpdateUserRequest,
+    responses: { 200: { schema: User } },
+  },
   async ({ params, query, body, user, reply, req }) => {
     // params.id - auto-inferred as string from path
     // query - validated query parameters (with type coercion)
@@ -285,11 +293,6 @@ const updateUser = patch('/users/:id',
     // req - original Fastify request
 
     return reply.ok(updatedUser)
-  },
-  {
-    query: Type.Object({ notify: Type.Optional(Type.Boolean()) }),
-    body: UpdateUserRequest,
-    responses: { 200: { schema: User } },
   }
 )
 ```
@@ -355,44 +358,44 @@ const usersController = defineController(
   { tag: 'Users', description: 'User management', prefix: '/api/v1/users' },
   {
     listUsers: get('/',
-      async ({ reply }) => reply.ok(await userService.findAll()),
       {
         summary: 'List users',
         responses: { 200: { schema: Type.Array(User) } },
-      }
+      },
+      async ({ reply }) => reply.ok(await userService.findAll())
     ),
 
     getUser: get('/:id',
+      {
+        summary: 'Get user by ID',
+        responses: { 200: { schema: User }, 404: null },
+      },
       async ({ params, reply }) => {
         const user = await userService.find(params.id)  // params.id auto-inferred
         if (!user) return reply.notFound()
         return reply.ok(user)
-      },
-      {
-        summary: 'Get user by ID',
-        responses: { 200: { schema: User }, 404: null },
       }
     ),
 
     createUser: post('/',
-      async ({ body, reply }) => reply.created(await userService.create(body)),
       {
         summary: 'Create a user',
         auth: 'required',
         body: CreateUser,
         responses: { 201: { schema: User }, 422: null },
-      }
+      },
+      async ({ body, reply }) => reply.created(await userService.create(body))
     ),
 
     deleteUser: del('/:id',
-      async ({ params, reply }) => {
-        await userService.delete(params.id)
-        return reply.noContent()
-      },
       {
         summary: 'Delete a user',
         auth: 'required',
         responses: { 204: null, 404: null },
+      },
+      async ({ params, reply }) => {
+        await userService.delete(params.id)
+        return reply.noContent()
       }
     ),
   }

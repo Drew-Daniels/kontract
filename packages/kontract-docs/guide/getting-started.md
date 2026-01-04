@@ -77,53 +77,53 @@ export const usersController = defineController(
   { tag: 'Users', prefix: '/api/users' },
   {
     listUsers: get('/',
-      async ({ reply }) => {
-        const users = await userService.findAll()
-        return reply.ok(users)
-      },
       {
         summary: 'List all users',
         responses: { 200: { schema: Type.Array(User) } },
+      },
+      async ({ reply }) => {
+        const users = await userService.findAll()
+        return reply.ok(users)
       }
     ),
 
     getUser: get('/:id',
-      async ({ params, reply }) => {
-        const user = await userService.find(params.id)
-        if (!user) return reply.notFound('User not found')
-        return reply.ok(user)
-      },
       {
         summary: 'Get a user by ID',
         params: Type.Object({ id: Type.String() }),
         responses: { 200: { schema: User }, 404: null },
+      },
+      async ({ params, reply }) => {
+        const user = await userService.find(params.id)
+        if (!user) return reply.notFound('User not found')
+        return reply.ok(user)
       }
     ),
 
     createUser: post('/',
-      async ({ body, reply }) => {
-        const user = await userService.create(body)
-        return reply.created(user)
-      },
       {
         summary: 'Create a new user',
         auth: 'required',
         body: CreateUserRequest,
         responses: { 201: { schema: User }, 422: null },
+      },
+      async ({ body, reply }) => {
+        const user = await userService.create(body)
+        return reply.created(user)
       }
     ),
 
     deleteUser: del('/:id',
-      async ({ params, reply }) => {
-        const deleted = await userService.delete(params.id)
-        if (!deleted) return reply.notFound('User not found')
-        return reply.noContent()
-      },
       {
         summary: 'Delete a user',
         auth: 'required',
         params: Type.Object({ id: Type.String() }),
         responses: { 204: null, 404: null },
+      },
+      async ({ params, reply }) => {
+        const deleted = await userService.delete(params.id)
+        if (!deleted) return reply.notFound('User not found')
+        return reply.noContent()
       }
     ),
   }
@@ -140,53 +140,53 @@ export const usersController = defineController(
   { tag: 'Users', prefix: '/api/users' },
   {
     listUsers: get('/',
-      async ({ reply }) => {
-        const users = await userService.findAll()
-        return reply.ok(users)
-      },
       {
         summary: 'List all users',
         responses: { 200: { schema: Type.Array(User) } },
+      },
+      async ({ reply }) => {
+        const users = await userService.findAll()
+        return reply.ok(users)
       }
     ),
 
     getUser: get('/:id',
-      async ({ params, reply }) => {
-        const user = await userService.find(params.id)
-        if (!user) return reply.notFound('User not found')
-        return reply.ok(user)
-      },
       {
         summary: 'Get a user by ID',
         params: Type.Object({ id: Type.String() }),
         responses: { 200: { schema: User }, 404: null },
+      },
+      async ({ params, reply }) => {
+        const user = await userService.find(params.id)
+        if (!user) return reply.notFound('User not found')
+        return reply.ok(user)
       }
     ),
 
     createUser: post('/',
-      async ({ body, reply }) => {
-        const user = await userService.create(body)
-        return reply.created(user)
-      },
       {
         summary: 'Create a new user',
         auth: 'required',
         body: CreateUserRequest,
         responses: { 201: { schema: User }, 422: null },
+      },
+      async ({ body, reply }) => {
+        const user = await userService.create(body)
+        return reply.created(user)
       }
     ),
 
     deleteUser: del('/:id',
-      async ({ params, reply }) => {
-        const deleted = await userService.delete(params.id)
-        if (!deleted) return reply.notFound('User not found')
-        return reply.noContent()
-      },
       {
         summary: 'Delete a user',
         auth: 'required',
         params: Type.Object({ id: Type.String() }),
         responses: { 204: null, 404: null },
+      },
+      async ({ params, reply }) => {
+        const deleted = await userService.delete(params.id)
+        if (!deleted) return reply.notFound('User not found')
+        return reply.noContent()
       }
     ),
   }
@@ -203,53 +203,53 @@ export const usersController = defineController(
   { tag: 'Users', prefix: '/api/users' },
   {
     listUsers: get('/',
-      async ({ reply }) => {
-        const users = await userService.findAll()
-        return reply.ok(users)
-      },
       {
         summary: 'List all users',
         responses: { 200: { schema: Type.Array(User) } },
+      },
+      async ({ reply }) => {
+        const users = await userService.findAll()
+        return reply.ok(users)
       }
     ),
 
     getUser: get('/:id',
-      async ({ params, reply }) => {
-        const user = await userService.find(params.id)
-        if (!user) return reply.notFound('User not found')
-        return reply.ok(user)
-      },
       {
         summary: 'Get a user by ID',
         params: Type.Object({ id: Type.String() }),
         responses: { 200: { schema: User }, 404: null },
+      },
+      async ({ params, reply }) => {
+        const user = await userService.find(params.id)
+        if (!user) return reply.notFound('User not found')
+        return reply.ok(user)
       }
     ),
 
     createUser: post('/',
-      async ({ body, reply }) => {
-        const user = await userService.create(body)
-        return reply.created(user)
-      },
       {
         summary: 'Create a new user',
         auth: 'required',
         body: CreateUserRequest,
         responses: { 201: { schema: User }, 422: null },
+      },
+      async ({ body, reply }) => {
+        const user = await userService.create(body)
+        return reply.created(user)
       }
     ),
 
     deleteUser: del('/:id',
-      async ({ params, reply }) => {
-        const deleted = await userService.delete(params.id)
-        if (!deleted) return reply.notFound('User not found')
-        return reply.noContent()
-      },
       {
         summary: 'Delete a user',
         auth: 'required',
         params: Type.Object({ id: Type.String() }),
         responses: { 204: null, 404: null },
+      },
+      async ({ params, reply }) => {
+        const deleted = await userService.delete(params.id)
+        if (!deleted) return reply.notFound('User not found')
+        return reply.noContent()
       }
     ),
   }
@@ -266,53 +266,53 @@ export const usersController = defineController(
   { tag: 'Users', prefix: '/api/users' },
   {
     listUsers: get('/',
-      async ({ reply }) => {
-        const users = await userService.findAll()
-        return reply.ok(users)
-      },
       {
         summary: 'List all users',
         responses: { 200: { schema: Type.Array(User) } },
+      },
+      async ({ reply }) => {
+        const users = await userService.findAll()
+        return reply.ok(users)
       }
     ),
 
     getUser: get('/:id',
-      async ({ params, reply }) => {
-        const user = await userService.find(params.id)
-        if (!user) return reply.notFound('User not found')
-        return reply.ok(user)
-      },
       {
         summary: 'Get a user by ID',
         params: Type.Object({ id: Type.String() }),
         responses: { 200: { schema: User }, 404: null },
+      },
+      async ({ params, reply }) => {
+        const user = await userService.find(params.id)
+        if (!user) return reply.notFound('User not found')
+        return reply.ok(user)
       }
     ),
 
     createUser: post('/',
-      async ({ body, reply }) => {
-        const user = await userService.create(body)
-        return reply.created(user)
-      },
       {
         summary: 'Create a new user',
         auth: 'required',
         body: CreateUserRequest,
         responses: { 201: { schema: User }, 422: null },
+      },
+      async ({ body, reply }) => {
+        const user = await userService.create(body)
+        return reply.created(user)
       }
     ),
 
     deleteUser: del('/:id',
-      async ({ params, reply }) => {
-        const deleted = await userService.delete(params.id)
-        if (!deleted) return reply.notFound('User not found')
-        return reply.noContent()
-      },
       {
         summary: 'Delete a user',
         auth: 'required',
         params: Type.Object({ id: Type.String() }),
         responses: { 204: null, 404: null },
+      },
+      async ({ params, reply }) => {
+        const deleted = await userService.delete(params.id)
+        if (!deleted) return reply.notFound('User not found')
+        return reply.noContent()
       }
     ),
   }
@@ -329,53 +329,53 @@ export const usersController = defineController(
   { tag: 'Users', prefix: '/api/users' },
   {
     listUsers: get('/',
-      async ({ reply }) => {
-        const users = await userService.findAll()
-        return reply.ok(users)
-      },
       {
         summary: 'List all users',
         responses: { 200: { schema: Type.Array(User) } },
+      },
+      async ({ reply }) => {
+        const users = await userService.findAll()
+        return reply.ok(users)
       }
     ),
 
     getUser: get('/:id',
-      async ({ params, reply }) => {
-        const user = await userService.find(params.id)
-        if (!user) return reply.notFound('User not found')
-        return reply.ok(user)
-      },
       {
         summary: 'Get a user by ID',
         params: Type.Object({ id: Type.String() }),
         responses: { 200: { schema: User }, 404: null },
+      },
+      async ({ params, reply }) => {
+        const user = await userService.find(params.id)
+        if (!user) return reply.notFound('User not found')
+        return reply.ok(user)
       }
     ),
 
     createUser: post('/',
-      async ({ body, reply }) => {
-        const user = await userService.create(body)
-        return reply.created(user)
-      },
       {
         summary: 'Create a new user',
         auth: 'required',
         body: CreateUserRequest,
         responses: { 201: { schema: User }, 422: null },
+      },
+      async ({ body, reply }) => {
+        const user = await userService.create(body)
+        return reply.created(user)
       }
     ),
 
     deleteUser: del('/:id',
-      async ({ params, reply }) => {
-        const deleted = await userService.delete(params.id)
-        if (!deleted) return reply.notFound('User not found')
-        return reply.noContent()
-      },
       {
         summary: 'Delete a user',
         auth: 'required',
         params: Type.Object({ id: Type.String() }),
         responses: { 204: null, 404: null },
+      },
+      async ({ params, reply }) => {
+        const deleted = await userService.delete(params.id)
+        if (!deleted) return reply.notFound('User not found')
+        return reply.noContent()
       }
     ),
   }

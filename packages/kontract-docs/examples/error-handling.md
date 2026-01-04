@@ -23,14 +23,14 @@ The simplest way to return errors using the reply helpers:
 import { get, post, defineController } from '@kontract/hono'
 
 const getResource = get('/:id',
+  { /* options */ },
   async ({ params, reply }) => {
     const resource = await findResource(params.id)
     if (!resource) {
       return reply.notFound('Resource not found')
     }
     return reply.ok(resource)
-  },
-  { /* options */ }
+  }
 )
 ```
 
@@ -62,6 +62,13 @@ const CustomError = Type.Object({
 })
 
 const getResource = get('/:id',
+  {
+    params: Type.Object({ id: Type.String() }),
+    responses: {
+      200: { schema: Resource },
+      404: { schema: CustomError },
+    },
+  },
   async ({ params, reply }) => {
     const resource = await findResource(params.id)
     if (!resource) {
@@ -75,13 +82,6 @@ const getResource = get('/:id',
       })
     }
     return reply.ok(resource)
-  },
-  {
-    params: Type.Object({ id: Type.String() }),
-    responses: {
-      200: { schema: Resource },
-      404: { schema: CustomError },
-    },
   }
 )
 ```
@@ -92,6 +92,13 @@ const getResource = get('/:id',
 
 ```typescript
 const createUser = post('/',
+  {
+    body: CreateUserRequest,
+    responses: {
+      201: { schema: User },
+      422: null,  // Uses standard ApiErrorBody
+    },
+  },
   async ({ body, reply }) => {
     const errors: Array<{ field: string; message: string }> = []
 
@@ -117,13 +124,6 @@ const createUser = post('/',
 
     const user = await createUser(body)
     return reply.created(user)
-  },
-  {
-    body: CreateUserRequest,
-    responses: {
-      201: { schema: User },
-      422: null,  // Uses standard ApiErrorBody
-    },
   }
 )
 ```
@@ -137,6 +137,10 @@ const DateRangeRequest = Type.Object({
 })
 
 const generateReport = post('/reports',
+  {
+    body: DateRangeRequest,
+    responses: { 200: { schema: Report }, 422: null },
+  },
   async ({ body, reply }) => {
     const start = new Date(body.startDate)
     const end = new Date(body.endDate)
@@ -155,10 +159,6 @@ const generateReport = post('/reports',
 
     const report = await generateReport(start, end)
     return reply.ok(report)
-  },
-  {
-    body: DateRangeRequest,
-    responses: { 200: { schema: Report }, 422: null },
   }
 )
 ```
@@ -167,6 +167,15 @@ const generateReport = post('/reports',
 
 ```typescript
 const createOrder = post('/orders',
+  {
+    auth: 'required',
+    body: CreateOrderRequest,
+    responses: {
+      201: { schema: Order },
+      400: null,  // Business logic errors
+      422: null,  // Validation errors
+    },
+  },
   async ({ body, user, reply }) => {
     // Check inventory
     for (const item of body.items) {
@@ -191,15 +200,6 @@ const createOrder = post('/orders',
 
     const order = await createOrder(user.id, body)
     return reply.created(order)
-  },
-  {
-    auth: 'required',
-    body: CreateOrderRequest,
-    responses: {
-      201: { schema: Order },
-      400: null,  // Business logic errors
-      422: null,  // Validation errors
-    },
   }
 )
 ```
@@ -208,6 +208,14 @@ const createOrder = post('/orders',
 
 ```typescript
 const getWeather = get('/weather/:city',
+  {
+    params: Type.Object({ city: Type.String() }),
+    responses: {
+      200: { schema: Weather },
+      502: null,  // External API error
+      503: null,  // Service unavailable
+    },
+  },
   async ({ params, reply }) => {
     try {
       const weather = await weatherApi.get(params.city)
@@ -221,14 +229,6 @@ const getWeather = get('/weather/:city',
       }
       return reply.badGateway('Failed to fetch weather data')
     }
-  },
-  {
-    params: Type.Object({ city: Type.String() }),
-    responses: {
-      200: { schema: Weather },
-      502: null,  // External API error
-      503: null,  // Service unavailable
-    },
   }
 )
 ```
@@ -237,6 +237,13 @@ const getWeather = get('/weather/:city',
 
 ```typescript
 const expensiveOperation = post('/api/expensive-operation',
+  {
+    auth: 'required',
+    responses: {
+      200: { schema: Result },
+      429: null,
+    },
+  },
   async ({ user, reply }) => {
     const key = `rate:${user.id}`
     const count = await redis.incr(key)
@@ -253,13 +260,6 @@ const expensiveOperation = post('/api/expensive-operation',
 
     const result = await performExpensiveOperation()
     return reply.ok(result)
-  },
-  {
-    auth: 'required',
-    responses: {
-      200: { schema: Result },
-      429: null,
-    },
   }
 )
 ```

@@ -68,6 +68,15 @@ export const authController = defineController(
   },
   {
     register: post('/register',
+      {
+        summary: 'Register a new user',
+        body: RegisterRequest,
+        responses: {
+          201: { schema: User, description: 'User created successfully' },
+          409: { schema: null, description: 'Email already registered' },
+          422: { schema: null, description: 'Validation error' },
+        },
+      },
       async ({ body, reply }) => {
         // Validate passwords match
         if (body.password !== body.confirmPassword) {
@@ -95,19 +104,18 @@ export const authController = defineController(
           email: user.email,
           createdAt: user.createdAt,
         })
-      },
-      {
-        summary: 'Register a new user',
-        body: RegisterRequest,
-        responses: {
-          201: { schema: User, description: 'User created successfully' },
-          409: { schema: null, description: 'Email already registered' },
-          422: { schema: null, description: 'Validation error' },
-        },
       }
     ),
 
     login: post('/login',
+      {
+        summary: 'Login with email and password',
+        body: LoginRequest,
+        responses: {
+          200: { schema: TokenResponse, description: 'Login successful' },
+          401: { schema: null, description: 'Invalid credentials' },
+        },
+      },
       async ({ body, reply }) => {
         const user = await findUserByEmail(body.email)
         if (!user) {
@@ -127,18 +135,18 @@ export const authController = defineController(
           expiresIn: 3600,  // 1 hour
           tokenType: 'Bearer',
         })
-      },
-      {
-        summary: 'Login with email and password',
-        body: LoginRequest,
-        responses: {
-          200: { schema: TokenResponse, description: 'Login successful' },
-          401: { schema: null, description: 'Invalid credentials' },
-        },
       }
     ),
 
     refresh: post('/refresh',
+      {
+        summary: 'Refresh access token',
+        body: RefreshTokenRequest,
+        responses: {
+          200: { schema: TokenResponse },
+          401: { schema: null, description: 'Invalid refresh token' },
+        },
+      },
       async ({ body, reply }) => {
         try {
           const payload = await verifyRefreshToken(body.refreshToken)
@@ -163,31 +171,28 @@ export const authController = defineController(
         } catch {
           return reply.unauthorized('Invalid refresh token')
         }
-      },
-      {
-        summary: 'Refresh access token',
-        body: RefreshTokenRequest,
-        responses: {
-          200: { schema: TokenResponse },
-          401: { schema: null, description: 'Invalid refresh token' },
-        },
       }
     ),
 
     logout: post('/logout',
-      async ({ body, reply }) => {
-        await revokeRefreshToken(body.refreshToken)
-        return reply.noContent()
-      },
       {
         summary: 'Logout and invalidate tokens',
         auth: 'required',
         body: RefreshTokenRequest,
         responses: { 204: null },
+      },
+      async ({ body, reply }) => {
+        await revokeRefreshToken(body.refreshToken)
+        return reply.noContent()
       }
     ),
 
     me: get('/me',
+      {
+        summary: 'Get current user',
+        auth: 'required',
+        responses: { 200: { schema: User }, 401: null },
+      },
       async ({ user, reply }) => {
         return reply.ok({
           id: user.id,
@@ -195,15 +200,20 @@ export const authController = defineController(
           email: user.email,
           createdAt: user.createdAt,
         })
-      },
-      {
-        summary: 'Get current user',
-        auth: 'required',
-        responses: { 200: { schema: User }, 401: null },
       }
     ),
 
     changePassword: patch('/password',
+      {
+        summary: 'Change password',
+        auth: 'required',
+        body: ChangePasswordRequest,
+        responses: {
+          204: null,
+          400: { schema: null, description: 'Current password incorrect' },
+          422: null,
+        },
+      },
       async ({ body, user, reply }) => {
         // Validate passwords match
         if (body.newPassword !== body.confirmPassword) {
@@ -227,16 +237,6 @@ export const authController = defineController(
         await revokeAllUserTokens(user.id)
 
         return reply.noContent()
-      },
-      {
-        summary: 'Change password',
-        auth: 'required',
-        body: ChangePasswordRequest,
-        responses: {
-          204: null,
-          400: { schema: null, description: 'Current password incorrect' },
-          422: null,
-        },
       }
     ),
   }

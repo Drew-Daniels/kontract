@@ -20,16 +20,16 @@ const testController = defineController({
   description: 'Test controller',
 }, {
   listUsers: get('/api/users',
-    async ({ reply }) => reply.ok({ id: '1', name: 'Test' }),
     { responses: { 200: { schema: UserSchema } } },
+    async ({ reply }) => reply.ok({ id: '1', name: 'Test' }),
   ),
   createUser: post('/api/users',
-    async ({ body, reply }) => reply.created({ id: '1', name: body.name }),
     { body: CreateUserSchema, responses: { 201: { schema: UserSchema } } },
+    async ({ body, reply }) => reply.created({ id: '1', name: body.name }),
   ),
   deleteUser: del('/api/users/:id',
-    async () => ({ __type: 'response' as const, status: 204, data: null }),
     { responses: { 204: null } },
+    async () => ({ __type: 'response' as const, status: 204, data: null }),
   ),
 })
 
@@ -106,8 +106,8 @@ test.group('registerController - with prefix', () => {
       prefix: '/v2',
     }, {
       list: get('/items',
-        async ({ reply }) => reply.ok({ id: '1', name: 'Item' }),
         { responses: { 200: { schema: UserSchema } } },
+        async ({ reply }) => reply.ok({ id: '1', name: 'Item' }),
       ),
     })
 

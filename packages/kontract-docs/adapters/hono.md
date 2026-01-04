@@ -36,26 +36,26 @@ export const usersController = defineController(
   { tag: 'Users', prefix: '/api/v1' },
   {
     listUsers: get('/users',
-      async ({ reply }) => {
-        const users = await userService.findAll()
-        return reply.ok(users)
-      },
       {
         summary: 'List all users',
         responses: { 200: { schema: Type.Array(User) } },
+      },
+      async ({ reply }) => {
+        const users = await userService.findAll()
+        return reply.ok(users)
       }
     ),
 
     // Path params like :id are automatically inferred as strings
     getUser: get('/users/:id',
+      {
+        summary: 'Get user by ID',
+        responses: { 200: { schema: User }, 404: null },
+      },
       async ({ params, reply }) => {
         const user = await userService.find(params.id)  // params.id is typed
         if (!user) return reply.notFound('User not found')
         return reply.ok(user)
-      },
-      {
-        summary: 'Get user by ID',
-        responses: { 200: { schema: User }, 404: null },
       }
     ),
   }
@@ -102,41 +102,41 @@ export const usersController = defineController(
   {
     // Use explicit params for UUID validation (auto-inference only gives string type)
     getUser: get('/users/:id',
-      async ({ params, reply }) => {
-        const user = await findUser(params.id)
-        if (!user) return reply.notFound('User not found')
-        return reply.ok(user)
-      },
       {
         summary: 'Get user by ID',
         params: Type.Object({ id: Type.String({ format: 'uuid' }) }),
         responses: { 200: { schema: User }, 404: null },
+      },
+      async ({ params, reply }) => {
+        const user = await findUser(params.id)
+        if (!user) return reply.notFound('User not found')
+        return reply.ok(user)
       }
     ),
 
     createUser: post('/users',
-      async ({ body, reply }) => {
-        const user = await userService.create(body)
-        return reply.created(user)
-      },
       {
         summary: 'Create a user',
         auth: 'required',
         body: CreateUser,
         responses: { 201: { schema: User }, 422: null },
+      },
+      async ({ body, reply }) => {
+        const user = await userService.create(body)
+        return reply.created(user)
       }
     ),
 
     deleteUser: del('/users/:id',
-      async ({ params, reply }) => {
-        await userService.delete(params.id)
-        return reply.noContent()
-      },
       {
         summary: 'Delete a user',
         auth: 'required',
         params: Type.Object({ id: Type.String({ format: 'uuid' }) }),
         responses: { 204: null },
+      },
+      async ({ params, reply }) => {
+        await userService.delete(params.id)
+        return reply.noContent()
       }
     ),
   }
@@ -182,6 +182,11 @@ The handler receives a fully-typed context:
 ```typescript
 // Path params like :id are automatically inferred
 const updateUser = patch('/users/:id',
+  {
+    query: Type.Object({ notify: Type.Optional(Type.Boolean()) }),
+    body: UpdateUserRequest,
+    responses: { 200: { schema: User } },
+  },
   async ({ params, query, body, user, reply, raw }) => {
     // params.id - auto-inferred as string from path
     // query - validated query parameters (typed)
@@ -191,11 +196,6 @@ const updateUser = patch('/users/:id',
     // raw - original Hono Context
 
     return reply.ok(updatedUser)
-  },
-  {
-    query: Type.Object({ notify: Type.Optional(Type.Boolean()) }),
-    body: UpdateUserRequest,
-    responses: { 200: { schema: User } },
   }
 )
 ```
@@ -369,44 +369,44 @@ const usersController = defineController(
   { tag: 'Users', description: 'User management', prefix: '/api/v1/users' },
   {
     listUsers: get('/',
-      async ({ reply }) => reply.ok(await userService.findAll()),
       {
         summary: 'List all users',
         responses: { 200: { schema: Type.Array(User) } },
-      }
+      },
+      async ({ reply }) => reply.ok(await userService.findAll())
     ),
 
     getUser: get('/:id',
+      {
+        summary: 'Get user by ID',
+        responses: { 200: { schema: User }, 404: null },
+      },
       async ({ params, reply }) => {
         const user = await userService.find(params.id)  // params.id auto-inferred
         if (!user) return reply.notFound()
         return reply.ok(user)
-      },
-      {
-        summary: 'Get user by ID',
-        responses: { 200: { schema: User }, 404: null },
       }
     ),
 
     createUser: post('/',
-      async ({ body, reply }) => reply.created(await userService.create(body)),
       {
         summary: 'Create a user',
         auth: 'required',
         body: CreateUser,
         responses: { 201: { schema: User }, 422: null },
-      }
+      },
+      async ({ body, reply }) => reply.created(await userService.create(body))
     ),
 
     deleteUser: del('/:id',
-      async ({ params, reply }) => {
-        await userService.delete(params.id)
-        return reply.noContent()
-      },
       {
         summary: 'Delete a user',
         auth: 'required',
         responses: { 204: null, 404: null },
+      },
+      async ({ params, reply }) => {
+        await userService.delete(params.id)
+        return reply.noContent()
       }
     ),
   }

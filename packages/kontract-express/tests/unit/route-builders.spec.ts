@@ -21,8 +21,8 @@ const QuerySchema = Type.Object({
 test.group('Route Builders - get()', () => {
   test('creates a GET route definition', ({ assert }) => {
     const route = get('/users',
-      async ({ reply }) => reply.ok({ id: '1', name: 'Test' }),
       { responses: { 200: { schema: UserSchema } } },
+      async ({ reply }) => reply.ok({ id: '1', name: 'Test' }),
     )
 
     assert.equal(route.__type, 'route')
@@ -33,10 +33,10 @@ test.group('Route Builders - get()', () => {
 
   test('infers path params from route', ({ assert }) => {
     const route = get('/users/:id',
+      { responses: { 200: { schema: UserSchema } } },
       async ({ params, reply }) => {
         return reply.ok({ id: params.id, name: 'Test' })
       },
-      { responses: { 200: { schema: UserSchema } } },
     )
 
     assert.equal(route.path, '/users/:id')
@@ -44,11 +44,11 @@ test.group('Route Builders - get()', () => {
 
   test('accepts query schema', ({ assert }) => {
     const route = get('/users',
-      async ({ reply }) => reply.ok({ id: '1', name: 'Test' }),
       {
         query: QuerySchema,
         responses: { 200: { schema: UserSchema } },
       },
+      async ({ reply }) => reply.ok({ id: '1', name: 'Test' }),
     )
 
     assert.equal(route.config.query, QuerySchema)
@@ -58,11 +58,11 @@ test.group('Route Builders - get()', () => {
 test.group('Route Builders - post()', () => {
   test('creates a POST route definition', ({ assert }) => {
     const route = post('/users',
-      async ({ body, reply }) => reply.created({ id: '1', name: body.name }),
       {
         body: CreateUserSchema,
         responses: { 201: { schema: UserSchema } },
       },
+      async ({ body, reply }) => reply.created({ id: '1', name: body.name }),
     )
 
     assert.equal(route.__type, 'route')
@@ -75,11 +75,11 @@ test.group('Route Builders - post()', () => {
 test.group('Route Builders - put()', () => {
   test('creates a PUT route definition', ({ assert }) => {
     const route = put('/users/:id',
-      async ({ params, body, reply }) => reply.ok({ id: params.id, name: body.name }),
       {
         body: CreateUserSchema,
         responses: { 200: { schema: UserSchema } },
       },
+      async ({ params, body, reply }) => reply.ok({ id: params.id, name: body.name }),
     )
 
     assert.equal(route.__type, 'route')
@@ -91,11 +91,11 @@ test.group('Route Builders - put()', () => {
 test.group('Route Builders - patch()', () => {
   test('creates a PATCH route definition', ({ assert }) => {
     const route = patch('/users/:id',
-      async ({ params, body, reply }) => reply.ok({ id: params.id, name: body.name }),
       {
         body: CreateUserSchema,
         responses: { 200: { schema: UserSchema } },
       },
+      async ({ params, body, reply }) => reply.ok({ id: params.id, name: body.name }),
     )
 
     assert.equal(route.__type, 'route')
@@ -107,10 +107,10 @@ test.group('Route Builders - patch()', () => {
 test.group('Route Builders - del()', () => {
   test('creates a DELETE route definition', ({ assert }) => {
     const route = del('/users/:id',
+      { responses: { 204: null } },
       async () => {
         return { __type: 'response' as const, status: 204, data: null }
       },
-      { responses: { 204: null } },
     )
 
     assert.equal(route.__type, 'route')
