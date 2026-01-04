@@ -5,7 +5,7 @@ The Express adapter provides middleware-based integration for Express.js applica
 ## Installation
 
 ```bash
-npm install kontract kontract-express kontract-ajv @sinclair/typebox express
+npm install @kontract/express @sinclair/typebox express
 ```
 
 ## Quick Start
@@ -21,7 +21,7 @@ import {
   registerController,
   createErrorHandler,
   buildOpenApiSpec,
-} from 'kontract-express'
+} from '@kontract/express'
 
 // Define schemas
 const User = Type.Object({
@@ -91,7 +91,7 @@ Use the method helpers to define type-safe routes:
 
 ```typescript
 import { Type } from '@sinclair/typebox'
-import { get, post, patch, del, defineController } from 'kontract-express'
+import { get, post, patch, del, defineController } from '@kontract/express'
 
 const User = Type.Object({
   id: Type.String(),
@@ -165,7 +165,7 @@ export const usersController = defineController(
 ### registerController
 
 ```typescript
-import { registerController } from 'kontract-express'
+import { registerController } from '@kontract/express'
 
 registerController(app, usersController, {
   // Optional: authentication function
@@ -184,7 +184,7 @@ registerController(app, usersController, {
 Register multiple controllers at once:
 
 ```typescript
-import { registerControllers } from 'kontract-express'
+import { registerControllers } from '@kontract/express'
 import { usersController, postsController } from './controllers/index.js'
 
 registerControllers(app, [usersController, postsController], {
@@ -199,7 +199,7 @@ registerControllers(app, [usersController, postsController], {
 **Must be registered after all routes:**
 
 ```typescript
-import { createErrorHandler } from 'kontract-express'
+import { createErrorHandler } from '@kontract/express'
 
 app.use(createErrorHandler({
   logErrors: process.env.NODE_ENV === 'development',
@@ -284,7 +284,7 @@ const login = post('/auth/login',
 ## OpenAPI Generation
 
 ```typescript
-import { buildOpenApiSpec } from 'kontract-express'
+import { buildOpenApiSpec } from '@kontract/express'
 import { usersController, postsController } from './controllers/index.js'
 
 const spec = buildOpenApiSpec({
@@ -323,7 +323,7 @@ import {
   registerController,
   createErrorHandler,
   buildOpenApiSpec,
-} from 'kontract-express'
+} from '@kontract/express'
 
 // Schemas
 const User = Type.Object({
@@ -455,7 +455,7 @@ import {
   type ExpressRouteHandler,
   type ExpressRouteDefinition,
   type RegisterOptions,
-} from 'kontract-express'
+} from '@kontract/express'
 ```
 
 ## Migration from Existing Routes

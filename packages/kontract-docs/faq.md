@@ -72,7 +72,7 @@ const User = Type.Object({
 Use the method helpers (`get`, `post`, `put`, `patch`, `del`) from your adapter:
 
 ```typescript
-import { get, post, defineController } from 'kontract-hono'
+import { get, post, defineController } from '@kontract/hono'
 
 const getUser = get('/users/:id',
   async ({ params, reply }) => {
@@ -126,7 +126,7 @@ Common causes:
 ### How do I add custom format validators?
 
 ```typescript
-import { createAjvValidator } from 'kontract-ajv'
+import { createAjvValidator } from '@kontract/ajv'
 
 const validator = createAjvValidator({
   formats: {
@@ -167,7 +167,7 @@ defineConfig({
 ### How do I serve the OpenAPI spec?
 
 ```typescript
-import { buildOpenApiSpec } from 'kontract-hono'
+import { buildOpenApiSpec } from '@kontract/hono'
 import { usersController } from './controllers/users.js'
 
 const spec = buildOpenApiSpec({
@@ -225,7 +225,7 @@ const User = Type.Object({
 
 ## Framework-Specific
 
-### Fastify: Why don't I need kontract-ajv?
+### Fastify: Why don't I need @kontract/ajv?
 
 Fastify has built-in AJV validation. Schemas are compiled once at startup and used for both validation and response serialization (via `fast-json-stringify`).
 
@@ -254,7 +254,7 @@ Yes! Hono is designed for edge runtimes:
 
 ```typescript
 import { Hono } from 'hono'
-import { registerController } from 'kontract-hono'
+import { registerController } from '@kontract/hono'
 import { usersController } from './controllers/users.js'
 
 const app = new Hono()
@@ -270,7 +270,7 @@ export default app
 This happens when the same schema with `$id` is registered twice. Use `stripNestedIds()`:
 
 ```typescript
-import { stripNestedIds } from 'kontract-ajv'
+import { stripNestedIds } from '@kontract/ajv'
 
 const cleanedSchema = stripNestedIds(schema)
 ```
@@ -299,7 +299,7 @@ Note: Handler parameters are inferred automatically from route schemas.
 Controllers must be passed to the spec builder:
 
 ```typescript
-import { buildOpenApiSpec } from 'kontract-hono'
+import { buildOpenApiSpec } from '@kontract/hono'
 import { usersController, postsController } from './controllers/index.js'
 
 const spec = buildOpenApiSpec({

@@ -50,7 +50,7 @@ export const ChangePasswordRequest = Type.Object({
 ```typescript
 // controllers/auth.controller.ts
 import { Type } from '@sinclair/typebox'
-import { get, post, patch, defineController } from 'kontract-hono'
+import { get, post, patch, defineController } from '@kontract/hono'
 import {
   LoginRequest,
   RegisterRequest,
@@ -249,7 +249,7 @@ export const authController = defineController(
 
 ```typescript [Hono]
 import { Hono } from 'hono'
-import { registerController, createErrorHandler } from 'kontract-hono'
+import { registerController, createErrorHandler } from '@kontract/hono'
 import { authController } from './controllers/auth.controller.js'
 
 const app = new Hono()
@@ -280,7 +280,7 @@ registerController(app, authController, {
 
 ```typescript [Fastify]
 import Fastify from 'fastify'
-import { registerController, registerErrorHandler } from 'kontract-fastify'
+import { registerController, registerErrorHandler } from '@kontract/fastify'
 import { authController } from './controllers/auth.controller.js'
 
 const app = Fastify()
@@ -304,7 +304,7 @@ registerController(app, authController, {
 
 ```typescript [Express]
 import express from 'express'
-import { registerController, createErrorHandler } from 'kontract-express'
+import { registerController, createErrorHandler } from '@kontract/express'
 import { authController } from './controllers/auth.controller.js'
 
 const app = express()
@@ -339,7 +339,7 @@ app.use(createErrorHandler())
 ## OpenAPI Security
 
 ```typescript
-import { buildOpenApiSpec } from 'kontract-hono'
+import { buildOpenApiSpec } from '@kontract/hono'
 import { authController } from './controllers/auth.controller.js'
 
 const spec = buildOpenApiSpec({

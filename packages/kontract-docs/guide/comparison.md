@@ -186,7 +186,7 @@ export const contract = c.router({
 ```typescript
 // Kontract uses TypeBox with simpler syntax
 import { Type } from '@sinclair/typebox'
-import { get, defineController } from 'kontract-hono'
+import { get, defineController } from '@kontract/hono'
 
 const User = Type.Object({
   id: Type.String(),
@@ -264,7 +264,7 @@ export type AppRouter = typeof appRouter
 ```typescript
 // Kontract - REST-style with routes
 import { Type } from '@sinclair/typebox'
-import { get, defineController } from 'kontract-hono'
+import { get, defineController } from '@kontract/hono'
 
 export const usersController = defineController(
   { tag: 'Users', prefix: '/users' },
@@ -338,7 +338,7 @@ const app = new Elysia()
 ```typescript
 // Kontract - library that works with any framework
 import { Type } from '@sinclair/typebox'
-import { get, defineController } from 'kontract-hono'
+import { get, defineController } from '@kontract/hono'
 
 export const usersController = defineController(
   { tag: 'Users', prefix: '/users' },
@@ -422,7 +422,7 @@ app.get<{ Params: { id: string }, Reply: UserType }>(
 ```typescript
 // Kontract with Fastify - cleaner syntax, same performance
 import { Type } from '@sinclair/typebox'
-import { get, defineController, registerController } from 'kontract-fastify'
+import { get, defineController, registerController } from '@kontract/fastify'
 
 export const usersController = defineController(
   { tag: 'Users', prefix: '/users' },
@@ -511,7 +511,7 @@ export class UsersController {
 ```typescript
 // Kontract - functional, TypeBox schemas
 import { Type } from '@sinclair/typebox'
-import { get, post, defineController } from 'kontract-hono'
+import { get, post, defineController } from '@kontract/hono'
 
 const User = Type.Object({
   id: Type.String(),
@@ -650,7 +650,7 @@ Kontract with Fastify uses Fastify's native validation, so there's no performanc
 
 ### From Fastify to Kontract + Fastify
 
-1. Install `kontract-fastify`
+1. Install `@kontract/fastify`
 2. Wrap routes in `defineController`
 3. Use Kontract's response helpers
 4. Enjoy the same performance with better DX

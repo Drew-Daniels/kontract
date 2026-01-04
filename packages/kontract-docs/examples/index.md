@@ -28,7 +28,7 @@ All examples use the same basic setup. Adapt to your framework:
 ```typescript [Hono]
 import { Hono } from 'hono'
 import { serve } from '@hono/node-server'
-import { registerController, createErrorHandler } from 'kontract-hono'
+import { registerController, createErrorHandler } from '@kontract/hono'
 import { usersController } from './controllers/users.js'
 
 const app = new Hono()
@@ -48,7 +48,7 @@ serve({ fetch: app.fetch, port: 3000 })
 
 ```typescript [Fastify]
 import Fastify from 'fastify'
-import { registerController, registerErrorHandler } from 'kontract-fastify'
+import { registerController, registerErrorHandler } from '@kontract/fastify'
 import { usersController } from './controllers/users.js'
 
 const app = Fastify()
@@ -68,7 +68,7 @@ app.listen({ port: 3000 })
 
 ```typescript [Express]
 import express from 'express'
-import { registerController, createErrorHandler } from 'kontract-express'
+import { registerController, createErrorHandler } from '@kontract/express'
 import { usersController } from './controllers/users.js'
 
 const app = express()

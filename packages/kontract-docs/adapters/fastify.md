@@ -16,11 +16,11 @@ Fastify provides significant performance advantages:
 ## Installation
 
 ```bash
-npm install kontract kontract-fastify @sinclair/typebox fastify
+npm install kontract @kontract/fastify @sinclair/typebox fastify
 ```
 
-::: tip No kontract-ajv needed
-Unlike Express and Hono, Fastify has built-in AJV validation, so you don't need `kontract-ajv`.
+::: tip No @kontract/ajv needed
+Unlike Express and Hono, Fastify has built-in AJV validation, so you don't need `@kontract/ajv`.
 :::
 
 ## Quick Start
@@ -36,7 +36,7 @@ import {
   registerController,
   registerErrorHandler,
   buildOpenApiSpec,
-} from 'kontract-fastify'
+} from '@kontract/fastify'
 
 // Define schemas
 const User = Type.Object({
@@ -110,7 +110,7 @@ Use the method helpers to define type-safe routes:
 
 ```typescript
 import { Type } from '@sinclair/typebox'
-import { get, post, patch, del, defineController } from 'kontract-fastify'
+import { get, post, patch, del, defineController } from '@kontract/fastify'
 
 const User = Type.Object({
   id: Type.String({ format: 'uuid' }),
@@ -297,7 +297,7 @@ const updateUser = patch('/users/:id',
 ## OpenAPI Generation
 
 ```typescript
-import { buildOpenApiSpec } from 'kontract-fastify'
+import { buildOpenApiSpec } from '@kontract/fastify'
 import { usersController, postsController } from './controllers/index.js'
 
 const spec = buildOpenApiSpec({
@@ -336,7 +336,7 @@ import {
   registerController,
   registerErrorHandler,
   buildOpenApiSpec,
-} from 'kontract-fastify'
+} from '@kontract/fastify'
 
 // Schemas
 const User = Type.Object({
@@ -469,7 +469,7 @@ import {
   type FastifyRouteHandler,
   type FastifyRouteDefinition,
   type RegisterOptions,
-} from 'kontract-fastify'
+} from '@kontract/fastify'
 ```
 
 ## Comparison with Other Adapters
@@ -477,7 +477,7 @@ import {
 | Feature | Express | Hono | Fastify |
 |---------|---------|------|---------|
 | Requires validation package | Yes | Yes | **No** |
-| Validation library | `kontract-ajv` | `kontract-ajv` | **Built-in** |
+| Validation library | `@kontract/ajv` | `@kontract/ajv` | **Built-in** |
 | Response serialization | JSON.stringify | JSON.stringify | **fast-json-stringify** |
 | Error handler | Middleware | `app.onError()` | `setErrorHandler()` |
 | Schema compilation | Per-request | Per-request | **Once at startup** |

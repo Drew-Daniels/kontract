@@ -1,25 +1,23 @@
 /**
  * Kontract Documentation Theme
- * A modern, developer-focused color scheme with blue-purple tones
+ * OpenAPI-inspired green color scheme
  */
 
 :root {
-  /* Brand colors */
-  --kontract-purple: #7c3aed;
-  --kontract-purple-light: #a78bfa;
-  --kontract-purple-dark: #5b21b6;
-  --kontract-blue: #3b82f6;
-  --kontract-blue-light: #60a5fa;
+  /* Brand colors - OpenAPI green */
+  --kontract-green: #93c83e;
+  --kontract-green-light: #a8d861;
+  --kontract-green-dark: #6a9a2d;
+  --kontract-green-darker: #4d7320;
   --kontract-cyan: #06b6d4;
-  --kontract-green: #10b981;
   --kontract-yellow: #f59e0b;
   --kontract-red: #ef4444;
 
   /* Light mode */
-  --vp-c-brand-1: var(--kontract-purple);
-  --vp-c-brand-2: var(--kontract-purple-light);
-  --vp-c-brand-3: var(--kontract-purple-dark);
-  --vp-c-brand-soft: rgba(124, 58, 237, 0.14);
+  --vp-c-brand-1: var(--kontract-green-dark);
+  --vp-c-brand-2: var(--kontract-green);
+  --vp-c-brand-3: var(--kontract-green-darker);
+  --vp-c-brand-soft: rgba(147, 200, 62, 0.14);
 
   --vp-c-tip-1: var(--kontract-cyan);
   --vp-c-tip-2: rgba(6, 182, 212, 0.16);
@@ -37,30 +35,30 @@
   --vp-home-hero-name-color: transparent;
   --vp-home-hero-name-background: linear-gradient(
     135deg,
-    var(--kontract-blue) 0%,
-    var(--kontract-purple) 50%,
-    var(--kontract-purple-light) 100%
+    var(--kontract-green-dark) 0%,
+    var(--kontract-green) 50%,
+    var(--kontract-green-light) 100%
   );
 
   --vp-home-hero-image-background-image: linear-gradient(
     135deg,
-    rgba(124, 58, 237, 0.3) 0%,
-    rgba(59, 130, 246, 0.3) 100%
+    rgba(147, 200, 62, 0.3) 0%,
+    rgba(106, 154, 45, 0.3) 100%
   );
   --vp-home-hero-image-filter: blur(44px);
 }
 
 .dark {
   /* Dark mode adjustments */
-  --vp-c-brand-1: var(--kontract-purple-light);
-  --vp-c-brand-2: var(--kontract-purple);
-  --vp-c-brand-3: #c4b5fd;
-  --vp-c-brand-soft: rgba(167, 139, 250, 0.16);
+  --vp-c-brand-1: var(--kontract-green);
+  --vp-c-brand-2: var(--kontract-green-light);
+  --vp-c-brand-3: #c4e88a;
+  --vp-c-brand-soft: rgba(147, 200, 62, 0.16);
 
   --vp-home-hero-image-background-image: linear-gradient(
     135deg,
-    rgba(167, 139, 250, 0.4) 0%,
-    rgba(96, 165, 250, 0.4) 100%
+    rgba(147, 200, 62, 0.4) 0%,
+    rgba(168, 216, 97, 0.4) 100%
   );
 }
 
@@ -87,7 +85,7 @@
 }
 
 .vp-doc .custom-block.info {
-  border-color: var(--kontract-blue);
+  border-color: var(--kontract-green);
 }
 
 /* Code highlighting enhancements */
@@ -101,12 +99,12 @@
 
 /* Button styling */
 .VPButton.brand {
-  background: linear-gradient(135deg, var(--kontract-purple) 0%, var(--kontract-blue) 100%);
+  background: linear-gradient(135deg, var(--kontract-green-dark) 0%, var(--kontract-green) 100%);
   border: none;
 }
 
 .VPButton.brand:hover {
-  background: linear-gradient(135deg, var(--kontract-purple-dark) 0%, var(--kontract-purple) 100%);
+  background: linear-gradient(135deg, var(--kontract-green-darker) 0%, var(--kontract-green-dark) 100%);
 }
 
 /* Feature cards on home page */
@@ -117,20 +115,20 @@
 
 .VPFeature:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(124, 58, 237, 0.15);
+  box-shadow: 0 8px 24px rgba(147, 200, 62, 0.15);
 }
 
 .dark .VPFeature:hover {
-  box-shadow: 0 8px 24px rgba(167, 139, 250, 0.2);
+  box-shadow: 0 8px 24px rgba(147, 200, 62, 0.2);
 }
 
 /* Sidebar active state */
 .VPSidebarItem.is-active > .item > .link > .text {
-  color: var(--kontract-purple);
+  color: var(--kontract-green-dark);
 }
 
 .dark .VPSidebarItem.is-active > .item > .link > .text {
-  color: var(--kontract-purple-light);
+  color: var(--kontract-green);
 }
 
 /* Navigation brand styling */

@@ -7,8 +7,8 @@ Kontract provides type-safe route helpers that automatically infer TypeScript ty
 Import route helpers from your framework adapter:
 
 ```typescript
-import { get, post, put, patch, del, defineController } from 'kontract-hono'
-// or kontract-express, kontract-fastify, kontract-adonis
+import { get, post, put, patch, del, defineController } from '@kontract/hono'
+// or @kontract/express, @kontract/fastify, @kontract/adonis
 ```
 
 ### GET
@@ -243,7 +243,7 @@ responses: {
 Group related routes under an OpenAPI tag:
 
 ```typescript
-import { get, post, patch, del, defineController } from 'kontract-hono'
+import { get, post, patch, del, defineController } from '@kontract/hono'
 
 export const usersController = defineController(
   {
@@ -275,7 +275,7 @@ Register controllers with your framework:
 
 ```typescript
 import { Hono } from 'hono'
-import { registerController } from 'kontract-hono'
+import { registerController } from '@kontract/hono'
 import { usersController, postsController } from './controllers.js'
 
 const app = new Hono()
@@ -287,7 +287,7 @@ registerController(app, postsController)
 Or register multiple controllers at once:
 
 ```typescript
-import { registerControllers } from 'kontract-hono'
+import { registerControllers } from '@kontract/hono'
 
 registerControllers(app, [usersController, postsController])
 ```
@@ -304,7 +304,7 @@ import {
   del,
   defineController,
   registerController,
-} from 'kontract-hono'
+} from '@kontract/hono'
 
 // Schemas
 const User = Type.Object({

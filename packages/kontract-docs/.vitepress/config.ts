@@ -14,7 +14,7 @@ export default defineConfig({
   },
 
   head: [
-    ['link', { rel: 'icon', href: '/kontract/logo.svg' }],
+    ['link', { rel: 'icon', href: '/logo.svg' }],
   ],
 
   ignoreDeadLinks: [
@@ -22,7 +22,7 @@ export default defineConfig({
   ],
 
   themeConfig: {
-    logo: '/kontract/logo.svg',
+    logo: '/logo.svg',
 
     nav: [
       { text: 'Guide', link: '/guide/' },
@@ -69,10 +69,10 @@ export default defineConfig({
           text: 'Framework Adapters',
           items: [
             { text: 'Overview', link: '/adapters/' },
-            { text: 'AdonisJS', link: '/adapters/adonis' },
             { text: 'Express', link: '/adapters/express' },
             { text: 'Fastify', link: '/adapters/fastify' },
             { text: 'Hono', link: '/adapters/hono' },
+            { text: 'AdonisJS', link: '/adapters/adonis' },
           ],
         },
       ],
@@ -82,8 +82,8 @@ export default defineConfig({
           items: [
             { text: 'Overview', link: '/api/' },
             { text: 'kontract', link: '/api/kontract' },
-            { text: 'kontract-ajv', link: '/api/kontract-ajv' },
-            { text: 'kontract-client', link: '/api/kontract-client' },
+            { text: '@kontract/ajv', link: '/api/kontract-ajv' },
+            { text: '@kontract/client', link: '/api/kontract-client' },
           ],
         },
       ],

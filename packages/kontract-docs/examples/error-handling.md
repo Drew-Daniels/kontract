@@ -20,7 +20,7 @@ interface ApiErrorBody {
 The simplest way to return errors using the reply helpers:
 
 ```typescript
-import { get, post, defineController } from 'kontract-hono'
+import { get, post, defineController } from '@kontract/hono'
 
 const getResource = get('/:id',
   async ({ params, reply }) => {
@@ -49,7 +49,7 @@ For full control over error response data:
 
 ```typescript
 import { Type } from '@sinclair/typebox'
-import { get, defineController } from 'kontract-hono'
+import { get, defineController } from '@kontract/hono'
 
 // Define custom error schema
 const CustomError = Type.Object({
@@ -270,7 +270,7 @@ const expensiveOperation = post('/api/expensive-operation',
 
 ```typescript [Hono]
 import { Hono } from 'hono'
-import { createErrorHandler } from 'kontract-hono'
+import { createErrorHandler } from '@kontract/hono'
 
 const app = new Hono()
 
@@ -294,7 +294,7 @@ app.onError(createErrorHandler({
 
 ```typescript [Fastify]
 import Fastify from 'fastify'
-import { registerErrorHandler } from 'kontract-fastify'
+import { registerErrorHandler } from '@kontract/fastify'
 
 const app = Fastify()
 
@@ -309,7 +309,7 @@ registerErrorHandler(app, {
 
 ```typescript [Express]
 import express from 'express'
-import { createErrorHandler } from 'kontract-express'
+import { createErrorHandler } from '@kontract/express'
 
 const app = express()
 

@@ -36,7 +36,7 @@ The core library knows nothing about HTTP frameworks. Adapters bridge the gap, l
 
 ```typescript
 import { Type } from '@sinclair/typebox'
-import { get, post, defineController } from 'kontract-hono'
+import { get, post, defineController } from '@kontract/hono'
 
 const User = Type.Object({
   id: Type.String(),

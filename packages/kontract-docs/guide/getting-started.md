@@ -8,22 +8,26 @@ Choose the installation based on your framework:
 
 ::: code-group
 
-```bash [Hono]
-npm install kontract kontract-hono kontract-ajv @sinclair/typebox
+```bash [Express]
+npm install @kontract/express @sinclair/typebox
 ```
 
 ```bash [Fastify]
-npm install kontract kontract-fastify @sinclair/typebox
+npm install @kontract/fastify @sinclair/typebox
 ```
 
-```bash [Express]
-npm install kontract kontract-express kontract-ajv @sinclair/typebox
+```bash [Hono]
+npm install @kontract/hono @sinclair/typebox
 ```
 
 ```bash [AdonisJS]
-npm install kontract-adonis @sinclair/typebox
+npm install @kontract/adonis @sinclair/typebox
 ```
 
+:::
+
+::: tip Validation Included
+All adapters include request validation out of the box. Express, Hono, and AdonisJS use `@kontract/ajv` (included as a dependency). Fastify uses its native TypeBox validation via `@fastify/type-provider-typebox`.
 :::
 
 ## Quick Start
@@ -62,7 +66,7 @@ Use the method helpers to define type-safe endpoints:
 ```typescript [Hono]
 // controllers/users.ts
 import { Type } from '@sinclair/typebox'
-import { get, post, del, defineController } from 'kontract-hono'
+import { get, post, del, defineController } from '@kontract/hono'
 import { User, CreateUserRequest } from '../schemas/user.js'
 
 export const usersController = defineController(
@@ -125,7 +129,7 @@ export const usersController = defineController(
 ```typescript [Fastify]
 // controllers/users.ts
 import { Type } from '@sinclair/typebox'
-import { get, post, del, defineController } from 'kontract-fastify'
+import { get, post, del, defineController } from '@kontract/fastify'
 import { User, CreateUserRequest } from '../schemas/user.js'
 
 export const usersController = defineController(
@@ -188,7 +192,7 @@ export const usersController = defineController(
 ```typescript [Express]
 // controllers/users.ts
 import { Type } from '@sinclair/typebox'
-import { get, post, del, defineController } from 'kontract-express'
+import { get, post, del, defineController } from '@kontract/express'
 import { User, CreateUserRequest } from '../schemas/user.js'
 
 export const usersController = defineController(
@@ -251,7 +255,7 @@ export const usersController = defineController(
 ```typescript [AdonisJS]
 // controllers/users.ts
 import { Type } from '@sinclair/typebox'
-import { get, post, del, defineController } from 'kontract-adonis'
+import { get, post, del, defineController } from '@kontract/adonis'
 import { User, CreateUserRequest } from '../schemas/user.js'
 
 export const usersController = defineController(
@@ -320,7 +324,7 @@ export const usersController = defineController(
 ```typescript [Hono]
 // app.ts
 import { Hono } from 'hono'
-import { registerController, createErrorHandler } from 'kontract-hono'
+import { registerController, createErrorHandler } from '@kontract/hono'
 import { usersController } from './controllers/users.js'
 
 const app = new Hono()
@@ -335,7 +339,7 @@ export default app
 ```typescript [Fastify]
 // app.ts
 import Fastify from 'fastify'
-import { registerController, registerErrorHandler } from 'kontract-fastify'
+import { registerController, registerErrorHandler } from '@kontract/fastify'
 import { usersController } from './controllers/users.js'
 
 const app = Fastify()
@@ -349,7 +353,7 @@ await app.listen({ port: 3000 })
 ```typescript [Express]
 // app.ts
 import express from 'express'
-import { registerController, createErrorHandler } from 'kontract-express'
+import { registerController, createErrorHandler } from '@kontract/express'
 import { usersController } from './controllers/users.js'
 
 const app = express()
@@ -364,7 +368,7 @@ app.listen(3000)
 ```typescript [AdonisJS]
 // start/routes.ts
 import router from '@adonisjs/core/services/router'
-import { registerController } from 'kontract-adonis'
+import { registerController } from '@kontract/adonis'
 import { usersController } from '#controllers/users'
 
 registerController(router, usersController)
@@ -377,7 +381,7 @@ registerController(router, usersController)
 Generate your OpenAPI specification:
 
 ```typescript
-import { buildOpenApiSpec } from 'kontract-hono' // or your adapter
+import { buildOpenApiSpec } from '@kontract/hono' // or your adapter
 import { usersController, postsController } from './controllers/index.js'
 
 const spec = buildOpenApiSpec({

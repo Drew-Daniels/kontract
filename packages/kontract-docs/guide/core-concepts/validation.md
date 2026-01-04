@@ -8,7 +8,7 @@ When you define schemas for `params`, `query`, or `body`, incoming requests are 
 
 ```typescript
 import { Type } from '@sinclair/typebox'
-import { post, defineController } from 'kontract-hono'
+import { post, defineController } from '@kontract/hono'
 
 const createUser = post('/',
   async ({ body, reply }) => {
@@ -75,16 +75,16 @@ When validation fails, a 422 response is returned:
 
 ## Validation Package
 
-Request validation is handled by `kontract-ajv`:
+Request validation is handled by `@kontract/ajv`, which is **already included** as a dependency of `@kontract/hono`, `@kontract/express`, and `@kontract/adonis`. No separate installation needed.
 
-```bash
-npm install kontract-ajv
-```
+::: tip Fastify
+`@kontract/fastify` uses Fastify's native TypeBox validation instead of `@kontract/ajv`.
+:::
 
 ### Creating a Validator
 
 ```typescript
-import { createAjvValidator } from 'kontract-ajv'
+import { createAjvValidator } from '@kontract/ajv'
 
 const validator = createAjvValidator({
   coerceTypes: true,      // Coerce strings to numbers/booleans
@@ -137,7 +137,7 @@ Optional response validation catches contract violations during development. Ena
 ::: code-group
 
 ```typescript [Hono]
-import { registerController } from 'kontract-hono'
+import { registerController } from '@kontract/hono'
 
 registerController(app, usersController, {
   validateResponses: process.env.NODE_ENV === 'development',
@@ -145,14 +145,14 @@ registerController(app, usersController, {
 ```
 
 ```typescript [Fastify]
-import { registerController } from 'kontract-fastify'
+import { registerController } from '@kontract/fastify'
 
 // Fastify has built-in response validation via schema
 registerController(app, usersController)
 ```
 
 ```typescript [Express]
-import { registerController } from 'kontract-express'
+import { registerController } from '@kontract/express'
 
 registerController(app, usersController, {
   validateResponses: process.env.NODE_ENV === 'development',
@@ -215,7 +215,7 @@ try {
 You can validate data manually:
 
 ```typescript
-import { validate } from 'kontract-ajv'
+import { validate } from '@kontract/ajv'
 
 const result = validate(UserSchema, data)
 
@@ -234,7 +234,7 @@ if (!result.valid) {
 Fastify has a unique advantage: it uses the same AJV-based validation but compiles schemas at startup for better performance:
 
 ```typescript
-import { registerController } from 'kontract-fastify'
+import { registerController } from '@kontract/fastify'
 
 // No validate function needed - Fastify handles it natively
 registerController(app, usersController)

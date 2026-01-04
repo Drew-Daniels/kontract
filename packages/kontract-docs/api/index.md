@@ -7,8 +7,8 @@ This section provides comprehensive API documentation for all Kontract packages.
 | Package | Description |
 |---------|-------------|
 | [kontract](/api/kontract) | Core library with response helpers and OpenAPI generation |
-| [kontract-ajv](/api/kontract-ajv) | AJV-based validation for TypeBox schemas |
-| [kontract-client](/api/kontract-client) | Type-safe HTTP client for consuming Kontract APIs |
+| [@kontract/ajv](/api/kontract-ajv) | AJV-based validation for TypeBox schemas |
+| [@kontract/client](/api/kontract-client) | Type-safe HTTP client for consuming Kontract APIs |
 
 ## Quick Reference
 
@@ -37,7 +37,7 @@ import {
   registerController,
   createErrorHandler,
   buildOpenApiSpec,
-} from 'kontract-hono'
+} from '@kontract/hono'
 
 // Fastify
 import {
@@ -46,7 +46,7 @@ import {
   registerController,
   registerErrorHandler,
   buildOpenApiSpec,
-} from 'kontract-fastify'
+} from '@kontract/fastify'
 
 // Express
 import {
@@ -55,7 +55,7 @@ import {
   registerController,
   createErrorHandler,
   buildOpenApiSpec,
-} from 'kontract-express'
+} from '@kontract/express'
 ```
 
 ### Validation Imports
@@ -65,13 +65,13 @@ import {
   validate,
   createAjvValidator,
   AjvValidationError,
-} from 'kontract-ajv'
+} from '@kontract/ajv'
 ```
 
 ### Client Imports
 
 ```typescript
-import { createClient } from 'kontract-client'
+import { createClient } from '@kontract/client'
 ```
 
 ## Type Reference

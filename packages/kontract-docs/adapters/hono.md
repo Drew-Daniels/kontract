@@ -5,7 +5,7 @@ The Hono adapter provides integration for Hono, a lightweight web framework that
 ## Installation
 
 ```bash
-npm install kontract kontract-hono kontract-ajv @sinclair/typebox hono
+npm install @kontract/hono @sinclair/typebox hono
 ```
 
 ## Quick Start
@@ -22,7 +22,7 @@ import {
   registerController,
   createErrorHandler,
   buildOpenApiSpec,
-} from 'kontract-hono'
+} from '@kontract/hono'
 
 // Define schemas
 const User = Type.Object({
@@ -84,7 +84,7 @@ Use the method helpers to define type-safe routes:
 
 ```typescript
 import { Type } from '@sinclair/typebox'
-import { get, post, patch, del, defineController } from 'kontract-hono'
+import { get, post, patch, del, defineController } from '@kontract/hono'
 
 const User = Type.Object({
   id: Type.String({ format: 'uuid' }),
@@ -148,7 +148,7 @@ export const usersController = defineController(
 ### registerController
 
 ```typescript
-import { registerController } from 'kontract-hono'
+import { registerController } from '@kontract/hono'
 
 registerController(app, usersController, {
   // Optional: authentication function
@@ -230,7 +230,7 @@ Authentication errors:
 ```typescript
 // src/index.ts
 import { Hono } from 'hono'
-import { registerController, createErrorHandler } from 'kontract-hono'
+import { registerController, createErrorHandler } from '@kontract/hono'
 import { usersController } from './controllers/users.js'
 
 const app = new Hono()
@@ -254,7 +254,7 @@ compatibility_date = "2024-01-01"
 ```typescript
 // main.ts
 import { Hono } from 'hono'
-import { registerController, createErrorHandler } from 'kontract-hono'
+import { registerController, createErrorHandler } from '@kontract/hono'
 import { usersController } from './controllers/users.ts'
 
 const app = new Hono()
@@ -271,7 +271,7 @@ Deno.serve(app.fetch)
 ```typescript
 // index.ts
 import { Hono } from 'hono'
-import { registerController, createErrorHandler } from 'kontract-hono'
+import { registerController, createErrorHandler } from '@kontract/hono'
 import { usersController } from './controllers/users.ts'
 
 const app = new Hono()
@@ -309,7 +309,7 @@ registerController(app, usersController)
 ## OpenAPI Generation
 
 ```typescript
-import { buildOpenApiSpec } from 'kontract-hono'
+import { buildOpenApiSpec } from '@kontract/hono'
 import { usersController, postsController } from './controllers/index.js'
 
 const spec = buildOpenApiSpec({
@@ -350,7 +350,7 @@ import {
   registerController,
   createErrorHandler,
   buildOpenApiSpec,
-} from 'kontract-hono'
+} from '@kontract/hono'
 
 // Schemas
 const User = Type.Object({
@@ -481,7 +481,7 @@ import {
   type HonoRouteHandler,
   type HonoRouteDefinition,
   type RegisterOptions,
-} from 'kontract-hono'
+} from '@kontract/hono'
 ```
 
 ## Comparison
@@ -490,6 +490,6 @@ import {
 |---------|---------|---------|------|
 | Bundle size | Large | Medium | **Small** |
 | Edge runtime support | No | No | **Yes** |
-| Validation | kontract-ajv | Built-in | kontract-ajv |
+| Validation | @kontract/ajv | Built-in | @kontract/ajv |
 | Performance | Good | Best | Very Good |
 | Middleware ecosystem | Extensive | Good | Growing |

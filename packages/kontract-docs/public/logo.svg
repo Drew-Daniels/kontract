@@ -1,17 +1,20 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" fill="none">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
   <defs>
-    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#3b82f6"/>
-      <stop offset="50%" style="stop-color:#7c3aed"/>
-      <stop offset="100%" style="stop-color:#a78bfa"/>
+    <linearGradient id="gg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#93c83e"/>
+      <stop offset="100%" stop-color="#6a9a2d"/>
     </linearGradient>
   </defs>
-  <!-- Document/Contract shape -->
-  <rect x="24" y="16" width="80" height="96" rx="8" fill="url(#gradient)" opacity="0.15"/>
-  <rect x="24" y="16" width="80" height="96" rx="8" stroke="url(#gradient)" stroke-width="3" fill="none"/>
-  <!-- K letter stylized -->
-  <path d="M44 32 L44 96 M44 64 L72 32 M44 64 L72 96" stroke="url(#gradient)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
-  <!-- Contract lines -->
-  <line x1="52" y1="76" x2="88" y2="76" stroke="url(#gradient)" stroke-width="3" stroke-linecap="round" opacity="0.5"/>
-  <line x1="52" y1="88" x2="80" y2="88" stroke="url(#gradient)" stroke-width="3" stroke-linecap="round" opacity="0.5"/>
+  <!-- Shield background -->
+  <path d="M64 8 L112 28 L112 68 Q112 100 64 120 Q16 100 16 68 L16 28 Z"
+        stroke="url(#gg)" stroke-width="4"
+        fill="url(#gg)" fill-opacity="0.1"/>
+  <!-- K letter as text -->
+  <text x="64" y="64"
+        font-family="JetBrains Mono, SF Mono, Menlo, Monaco, Consolas, monospace"
+        font-size="72"
+        font-weight="700"
+        text-anchor="middle"
+        dominant-baseline="central"
+        fill="url(#gg)">K</text>
 </svg>

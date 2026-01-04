@@ -39,12 +39,12 @@ Thank you for your interest in contributing to Kontract! This guide will help yo
 ```
 packages/
 ├── kontract/           # Core library
-├── kontract-ajv/       # AJV validation
-├── kontract-adonis/    # AdonisJS adapter
-├── kontract-express/   # Express adapter
-├── kontract-fastify/   # Fastify adapter
-├── kontract-hono/      # Hono adapter
-├── kontract-client/    # HTTP client
+├── @kontract/ajv/       # AJV validation
+├── @kontract/adonis/    # AdonisJS adapter
+├── @kontract/express/   # Express adapter
+├── @kontract/fastify/   # Fastify adapter
+├── @kontract/hono/      # Hono adapter
+├── @kontract/client/    # HTTP client
 └── kontract-docs/      # Documentation (this site)
 ```
 
@@ -81,7 +81,7 @@ Each package has its own test suite:
 ```bash
 # Run tests for a specific package
 npx nx run kontract:test
-npx nx run kontract-express:test
+npx nx run @kontract/express:test
 
 # Run all tests
 npx nx run-many --target=test --all
@@ -134,7 +134,7 @@ chore: maintenance tasks
 Examples:
 ```
 feat(kontract): add binary response helper
-fix(kontract-express): handle validation errors correctly
+fix(@kontract/express): handle validation errors correctly
 docs: add file upload example
 ```
 

@@ -1,11 +1,11 @@
-# kontract-ajv
+# @kontract/ajv
 
 AJV-based validation package for TypeBox schemas. Used by Express and Hono adapters.
 
 ## Installation
 
 ```bash
-npm install kontract-ajv @sinclair/typebox
+npm install @kontract/ajv @sinclair/typebox
 ```
 
 ::: tip Not needed for Fastify
@@ -15,7 +15,7 @@ The Fastify adapter uses Fastify's built-in AJV validation, so you don't need th
 ## Quick Start
 
 ```typescript
-import { validate, createAjvValidator } from 'kontract-ajv'
+import { validate, createAjvValidator } from '@kontract/ajv'
 import { Type } from '@sinclair/typebox'
 
 const UserSchema = Type.Object({
@@ -41,7 +41,7 @@ const validator = createAjvValidator({
 Validates data against a TypeBox schema. Throws `AjvValidationError` on failure.
 
 ```typescript
-import { validate } from 'kontract-ajv'
+import { validate } from '@kontract/ajv'
 
 try {
   const validated = validate(UserSchema, input)
@@ -66,7 +66,7 @@ try {
 Creates a customized AJV validator instance.
 
 ```typescript
-import { createAjvValidator } from 'kontract-ajv'
+import { createAjvValidator } from '@kontract/ajv'
 
 const validator = createAjvValidator({
   coerceTypes: true,
@@ -118,7 +118,7 @@ compiled.validateOrThrow(data)  // Throws on error
 Gets or creates the singleton validator instance:
 
 ```typescript
-import { getDefaultValidator } from 'kontract-ajv'
+import { getDefaultValidator } from '@kontract/ajv'
 
 const validator = getDefaultValidator()
 ```
@@ -128,7 +128,7 @@ const validator = getDefaultValidator()
 Resets the default validator (useful for testing):
 
 ```typescript
-import { resetDefaultValidator } from 'kontract-ajv'
+import { resetDefaultValidator } from '@kontract/ajv'
 
 beforeEach(() => {
   resetDefaultValidator()
@@ -140,7 +140,7 @@ beforeEach(() => {
 Removes `$id` from nested schemas to prevent AJV conflicts:
 
 ```typescript
-import { stripNestedIds } from 'kontract-ajv'
+import { stripNestedIds } from '@kontract/ajv'
 
 const cleanedSchema = stripNestedIds(complexSchema)
 ```
@@ -150,7 +150,7 @@ const cleanedSchema = stripNestedIds(complexSchema)
 Error thrown when validation fails:
 
 ```typescript
-import { AjvValidationError } from 'kontract-ajv'
+import { AjvValidationError } from '@kontract/ajv'
 
 try {
   validate(schema, data)
@@ -294,5 +294,5 @@ import type {
   ValidatorOptions,
   ValidationErrorDetail,
   AjvValidatorOptions,
-} from 'kontract-ajv'
+} from '@kontract/ajv'
 ```

@@ -1,17 +1,17 @@
-# kontract-client
+# @kontract/client
 
 Type-safe HTTP client for consuming Kontract APIs. Generate fully-typed API clients from your route definitions without a separate code generation step.
 
 ## Installation
 
 ```bash
-npm install kontract-client
+npm install @kontract/client
 ```
 
 ## Quick Start
 
 ```typescript
-import { createClient } from 'kontract-client'
+import { createClient } from '@kontract/client'
 import { usersController, postsController } from './api/controllers.js'
 
 const api = createClient({
@@ -34,7 +34,7 @@ const posts = await api.posts.listPosts({ query: { page: 1 } })
 Creates a type-safe HTTP client from controller definitions.
 
 ```typescript
-import { createClient } from 'kontract-client'
+import { createClient } from '@kontract/client'
 
 const api = createClient({
   baseUrl: 'http://localhost:3000',
@@ -128,7 +128,7 @@ if (result.status === 200) {
 Builds a complete URL with path parameters and query string:
 
 ```typescript
-import { buildUrl } from 'kontract-client'
+import { buildUrl } from '@kontract/client'
 
 const url = buildUrl(
   'http://api.example.com',
@@ -144,7 +144,7 @@ const url = buildUrl(
 Substitutes path parameters:
 
 ```typescript
-import { substitutePath } from 'kontract-client'
+import { substitutePath } from '@kontract/client'
 
 const path = substitutePath('/users/:id/posts/:postId', {
   id: '123',
@@ -158,7 +158,7 @@ const path = substitutePath('/users/:id/posts/:postId', {
 Builds a URL query string:
 
 ```typescript
-import { buildQueryString } from 'kontract-client'
+import { buildQueryString } from '@kontract/client'
 
 const qs = buildQueryString({
   page: 1,
@@ -235,7 +235,7 @@ const api = createClient({
 Use a custom fetch implementation (e.g., for interceptors):
 
 ```typescript
-import { createClient } from 'kontract-client'
+import { createClient } from '@kontract/client'
 
 const customFetch: typeof fetch = async (url, options) => {
   // Add logging, retry logic, etc.
@@ -269,7 +269,7 @@ const api = createClient({
 
 ```typescript
 // api/client.ts
-import { createClient } from 'kontract-client'
+import { createClient } from '@kontract/client'
 import { usersController, postsController, authController } from './controllers.js'
 
 let authToken: string | null = null
@@ -328,5 +328,5 @@ import type {
   InferRequestOptions,
   InferResponse,
   InferControllerClient,
-} from 'kontract-client'
+} from '@kontract/client'
 ```

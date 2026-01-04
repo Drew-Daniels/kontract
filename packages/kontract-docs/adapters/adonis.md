@@ -5,7 +5,7 @@ The AdonisJS adapter provides deep integration with AdonisJS v6, including Lucid
 ## Installation
 
 ```bash
-npm install kontract-adonis @sinclair/typebox
+npm install @kontract/adonis @sinclair/typebox
 ```
 
 The adapter re-exports common items from the core package, so you can import everything from one place.
@@ -17,7 +17,7 @@ The adapter re-exports common items from the core package, so you can import eve
 ```typescript
 // app/controllers/books_controller.ts
 import { Type } from '@sinclair/typebox'
-import { get, post, del, defineController } from 'kontract-adonis'
+import { get, post, del, defineController } from '@kontract/adonis'
 import Book from '#models/book'
 
 const BookSchema = Type.Object({
@@ -66,7 +66,7 @@ export const booksController = defineController(
 ```typescript
 // start/routes.ts
 import router from '@adonisjs/core/services/router'
-import { registerController } from 'kontract-adonis'
+import { registerController } from '@kontract/adonis'
 import { booksController } from '#controllers/books_controller'
 import { usersController } from '#controllers/users_controller'
 
@@ -78,7 +78,7 @@ registerController(router, usersController)
 
 ```typescript
 // start/routes.ts
-import { buildOpenApiSpec } from 'kontract-adonis'
+import { buildOpenApiSpec } from '@kontract/adonis'
 import { booksController, usersController } from '#controllers/index'
 
 const spec = buildOpenApiSpec({
@@ -98,7 +98,7 @@ Use the method helpers to define type-safe routes:
 
 ```typescript
 import { Type } from '@sinclair/typebox'
-import { get, post, patch, del, defineController } from 'kontract-adonis'
+import { get, post, patch, del, defineController } from '@kontract/adonis'
 
 const User = Type.Object({
   id: Type.String(),
@@ -289,7 +289,7 @@ Enable response validation in development:
 ```typescript
 // providers/app_provider.ts
 import { defineConfig } from 'kontract'
-import { createAjvValidator } from 'kontract-adonis'
+import { createAjvValidator } from '@kontract/adonis'
 
 export default class AppProvider {
   async boot() {
@@ -324,13 +324,13 @@ import {
   isTypedModel,
   isPaginator,
   lucidSerializers,
-} from 'kontract-adonis'
+} from '@kontract/adonis'
 ```
 
 ## OpenAPI Generation
 
 ```typescript
-import { buildOpenApiSpec } from 'kontract-adonis'
+import { buildOpenApiSpec } from '@kontract/adonis'
 import { usersController, booksController } from '#controllers/index'
 
 const spec = buildOpenApiSpec({
@@ -359,7 +359,7 @@ const spec = buildOpenApiSpec({
 ```typescript
 // app/controllers/users_controller.ts
 import { Type } from '@sinclair/typebox'
-import { get, post, patch, del, defineController } from 'kontract-adonis'
+import { get, post, patch, del, defineController } from '@kontract/adonis'
 import User from '#models/user'
 import UserService from '#services/user_service'
 import { inject } from '@adonisjs/core'
@@ -467,7 +467,7 @@ import {
 
   // TypeBox re-export
   Type,
-} from 'kontract-adonis'
+} from '@kontract/adonis'
 ```
 
 ## Peer Dependencies

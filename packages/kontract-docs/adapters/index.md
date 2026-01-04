@@ -6,22 +6,22 @@ Kontract's core library is framework-agnostic. Adapters bridge the gap between y
 
 | Adapter | Framework | Validation | Best For |
 |---------|-----------|------------|----------|
-| [kontract-hono](/adapters/hono) | Hono | kontract-ajv | Edge runtimes, serverless |
-| [kontract-fastify](/adapters/fastify) | Fastify | Native (no extra package) | Maximum performance |
-| [kontract-express](/adapters/express) | Express.js | kontract-ajv | Existing Express projects, maximum flexibility |
-| [kontract-adonis](/adapters/adonis) | AdonisJS v6 | Built-in AJV | Full-stack Node.js apps with Lucid ORM |
+| [@kontract/express](/adapters/express) | Express.js | @kontract/ajv (included) | Existing Express projects, maximum ecosystem |
+| [@kontract/fastify](/adapters/fastify) | Fastify | Native TypeBox | Maximum performance |
+| [@kontract/hono](/adapters/hono) | Hono | @kontract/ajv (included) | Edge runtimes, serverless |
+| [@kontract/adonis](/adapters/adonis) | AdonisJS v6 | @kontract/ajv (included) | Full-stack Node.js apps with Lucid ORM |
 
 ## Choosing an Adapter
 
-### Hono
+### Express
 
-Lightweight and edge-ready:
-- Works on Cloudflare Workers, Deno, Bun
-- Small bundle size
-- Elysia-style API
+Most popular and flexible option:
+- Largest ecosystem of middleware
+- Easy migration from existing routes
+- Works with any Express middleware
 
 ```bash
-npm install kontract kontract-hono kontract-ajv @sinclair/typebox
+npm install @kontract/express @sinclair/typebox express
 ```
 
 ### Fastify
@@ -29,32 +29,32 @@ npm install kontract kontract-hono kontract-ajv @sinclair/typebox
 Best performance due to native features:
 - Schemas compiled once at startup (not per-request)
 - fast-json-stringify for 2x faster responses
-- No separate validation package needed
+- Native TypeBox validation (no @kontract/ajv needed)
 
 ```bash
-npm install kontract kontract-fastify @sinclair/typebox
+npm install @kontract/fastify @sinclair/typebox fastify
 ```
 
-### Express
+### Hono
 
-Most flexible option for existing projects:
-- Works with any Express middleware
-- Manual validation control
-- Easy migration from existing routes
+Lightweight and edge-ready:
+- Works on Cloudflare Workers, Deno, Bun
+- Small bundle size
+- Modern API design
 
 ```bash
-npm install kontract kontract-express kontract-ajv @sinclair/typebox
+npm install @kontract/hono @sinclair/typebox hono
 ```
 
 ### AdonisJS
 
-Best for full-stack Node.js applications. Includes:
+Best for full-stack Node.js applications:
 - Automatic Lucid model serialization
 - Integrated authentication via AdonisJS auth
 - Dependency injection support
 
 ```bash
-npm install kontract-adonis @sinclair/typebox
+npm install @kontract/adonis @sinclair/typebox
 ```
 
 ## Common Patterns
@@ -64,7 +64,7 @@ All adapters export route helpers and share similar registration patterns:
 ### Defining Routes
 
 ```typescript
-import { get, post, defineController } from 'kontract-hono'
+import { get, post, defineController } from '@kontract/express'
 
 const getUser = get('/users/:id',
   async ({ params, reply }) => {
@@ -87,7 +87,7 @@ export const usersController = defineController(
 ### Registering Controllers
 
 ```typescript
-import { registerController, registerControllers } from 'kontract-hono'
+import { registerController, registerControllers } from '@kontract/express'
 import { usersController, postsController } from './controllers/index.js'
 
 registerController(app, usersController)
@@ -97,9 +97,9 @@ registerControllers(app, [usersController, postsController])
 
 ## Validation Comparison
 
-| Feature | Hono | Fastify | Express | AdonisJS |
-|---------|------|---------|---------|----------|
-| Validation package | kontract-ajv | Native | kontract-ajv | Built-in |
+| Feature | Express | Fastify | Hono | AdonisJS |
+|---------|---------|---------|------|----------|
+| Validation package | @kontract/ajv (included) | Native | @kontract/ajv (included) | @kontract/ajv (included) |
 | Type coercion | Yes | Yes | Yes | Yes |
 | Response serialization | JSON.stringify | fast-json-stringify | JSON.stringify | JSON.stringify |
 
@@ -126,7 +126,7 @@ const createUser = post('/users',
 Configure the authentication check when registering:
 
 ```typescript
-// Hono/Express
+// Express/Hono
 registerController(app, usersController, {
   authenticate: async (c) => {
     const token = c.req.header('Authorization')?.replace('Bearer ', '')
@@ -150,7 +150,7 @@ registerController(router, usersController)
 All adapters provide a way to build the OpenAPI spec from controllers:
 
 ```typescript
-import { buildOpenApiSpec } from 'kontract-hono'
+import { buildOpenApiSpec } from '@kontract/express'
 import { usersController, postsController } from './controllers/index.js'
 
 const spec = buildOpenApiSpec({
@@ -166,7 +166,7 @@ const spec = buildOpenApiSpec({
 
 Choose your adapter and follow the detailed guide:
 
-- [Hono Adapter](/adapters/hono) - Edge deployment
-- [Fastify Adapter](/adapters/fastify) - Performance optimizations
 - [Express Adapter](/adapters/express) - Middleware setup
+- [Fastify Adapter](/adapters/fastify) - Performance optimizations
+- [Hono Adapter](/adapters/hono) - Edge deployment
 - [AdonisJS Adapter](/adapters/adonis) - Full integration guide

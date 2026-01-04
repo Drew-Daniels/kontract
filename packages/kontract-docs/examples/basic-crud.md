@@ -76,7 +76,7 @@ export const BookListResponse = Type.Object({
 ```typescript
 // controllers/books.controller.ts
 import { Type } from '@sinclair/typebox'
-import { get, post, patch, del, defineController } from 'kontract-hono'
+import { get, post, patch, del, defineController } from '@kontract/hono'
 import {
   Book,
   BookType,

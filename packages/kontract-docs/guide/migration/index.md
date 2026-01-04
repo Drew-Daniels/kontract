@@ -40,7 +40,7 @@ app.get('/users/:id', async (req, res) => {
 
 ```typescript
 import { Type } from '@sinclair/typebox'
-import { get, defineController } from 'kontract-hono'
+import { get, defineController } from '@kontract/hono'
 
 const User = Type.Object({
   id: Type.String(),
@@ -95,7 +95,7 @@ app.post('/users',
 
 ```typescript
 import { Type } from '@sinclair/typebox'
-import { post, defineController } from 'kontract-express'
+import { post, defineController } from '@kontract/express'
 
 const CreateUser = Type.Object({
   email: Type.String({ format: 'email' }),
@@ -145,7 +145,7 @@ app.get('/users/:id', async (req, res) => {
 
 ```typescript
 import { Type, Static } from '@sinclair/typebox'
-import { get, defineController } from 'kontract-hono'
+import { get, defineController } from '@kontract/hono'
 
 const User = Type.Object({
   id: Type.String(),
@@ -211,7 +211,7 @@ export class UsersController {
 
 ```typescript
 import { Type } from '@sinclair/typebox'
-import { get, defineController } from 'kontract-hono'
+import { get, defineController } from '@kontract/hono'
 
 export const usersController = defineController(
   { tag: 'Users', prefix: '/users' },
@@ -273,7 +273,7 @@ fastify.post('/users', {
 
 ```typescript
 import { Type } from '@sinclair/typebox'
-import { post, defineController } from 'kontract-fastify'
+import { post, defineController } from '@kontract/fastify'
 
 const CreateUser = Type.Object({
   email: Type.String({ format: 'email' }),

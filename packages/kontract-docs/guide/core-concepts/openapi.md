@@ -5,7 +5,7 @@ Kontract automatically generates OpenAPI specifications from your controllers. N
 ## Basic Usage
 
 ```typescript
-import { buildOpenApiSpec } from 'kontract-hono'
+import { buildOpenApiSpec } from '@kontract/hono'
 import { usersController, postsController } from './controllers/index.js'
 
 const spec = buildOpenApiSpec({
@@ -381,7 +381,7 @@ import {
   defineController,
   registerController,
   buildOpenApiSpec,
-} from 'kontract-hono'
+} from '@kontract/hono'
 
 // Schemas
 const Book = Type.Object({

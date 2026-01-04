@@ -23,7 +23,7 @@ The `reply` object is available in every handler context:
 
 ```typescript
 import { Type } from '@sinclair/typebox'
-import { get, post, del, defineController } from 'kontract-hono'
+import { get, post, del, defineController } from '@kontract/hono'
 
 const getUser = get('/:id',
   async ({ params, reply }) => {
@@ -213,7 +213,7 @@ Kontract uses standardized error codes:
 
 ```typescript
 import { Type } from '@sinclair/typebox'
-import { get, post, del, defineController } from 'kontract-hono'
+import { get, post, del, defineController } from '@kontract/hono'
 
 const User = Type.Object({
   id: Type.String(),

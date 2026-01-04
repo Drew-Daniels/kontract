@@ -18,7 +18,7 @@ Kontract solves these problems by making your schema definitions the single sour
 
 ```typescript
 import { Type } from '@sinclair/typebox'
-import { get, defineController } from 'kontract-hono'
+import { get, defineController } from '@kontract/hono'
 
 const User = Type.Object({
   id: Type.String(),
@@ -110,12 +110,12 @@ Generate OpenAPI 3.0.3 or 3.1.0 specifications from your route definitions. The 
 │  - OpenAPI generation                                    │
 ├─────────────────────────────────────────────────────────┤
 │              Framework Adapter                           │
-│  kontract-hono | kontract-fastify | kontract-express    │
+│  @kontract/hono | @kontract/fastify | @kontract/express    │
 │  - Route registration                                    │
 │  - Request validation                                    │
 │  - Response handling                                     │
 ├─────────────────────────────────────────────────────────┤
-│              kontract-ajv (validation)                   │
+│              @kontract/ajv (validation)                   │
 │  - AJV-based schema validation                          │
 │  - Type coercion and format validation                  │
 └─────────────────────────────────────────────────────────┘

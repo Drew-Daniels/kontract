@@ -32,7 +32,7 @@ export const UploadResponse = Type.Object({
 ```typescript
 // controllers/users.controller.ts
 import { Type } from '@sinclair/typebox'
-import { get, post, del, defineController } from 'kontract-hono'
+import { get, post, del, defineController } from '@kontract/hono'
 import { User, UserParams, UploadResponse } from '../schemas/avatar.js'
 
 export const usersController = defineController(
