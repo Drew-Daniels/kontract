@@ -12,7 +12,7 @@
  *   async ({ params, reply, error }) => {
  *     const user = await User.find(params.id)
  *     if (!user) return error.notFound('User not found')
- *     return reply.ok(user)
+ *     return reply.ok(user.serialize())
  *   },
  *   {
  *     params: Type.Object({ id: Type.String() }),
@@ -77,20 +77,6 @@ export {
   type GetRouteOptions,
   type BodyRouteOptions,
 } from './adapters/controller-registrar.js'
-
-// ============ Serializers ============
-export {
-  isLucidModel,
-  isTypedModel,
-  isPaginator,
-  hasSerialize,
-  typedModelSerializer,
-  lucidModelSerializer,
-  paginatorSerializer,
-  serializableSerializer,
-  lucidSerializers,
-  type ResponseModel,
-} from './serializers/lucid.js'
 
 // ============ Validation ============
 export {

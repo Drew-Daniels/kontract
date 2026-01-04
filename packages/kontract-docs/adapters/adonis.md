@@ -1,6 +1,6 @@
 # AdonisJS Adapter
 
-The AdonisJS adapter provides deep integration with AdonisJS v6, including Lucid ORM serialization, authentication, and dependency injection.
+The AdonisJS adapter provides deep integration with AdonisJS v6, including authentication and dependency injection.
 
 ## Installation
 
@@ -37,7 +37,7 @@ export const booksController = defineController(
     listBooks: get('/',
       async ({ reply }) => {
         const books = await Book.all()
-        return reply.ok(books)
+        return reply.ok(books.map(b => b.serialize()))
       },
       {
         summary: 'List all books',
@@ -48,7 +48,7 @@ export const booksController = defineController(
     createBook: post('/',
       async ({ body, reply }) => {
         const book = await Book.create(body)
-        return reply.created(book)
+        return reply.created(book.serialize())
       },
       {
         summary: 'Create a book',
@@ -123,12 +123,20 @@ export const usersController = defineController(
     listUsers: get('/',
       async ({ query, reply }) => {
         const users = await User.query().paginate(query.page, query.limit)
-        return reply.ok(users)
+        return reply.ok({
+          data: users.all().map(u => u.serialize()),
+          meta: {
+            total: users.total,
+            perPage: users.perPage,
+            currentPage: users.currentPage,
+            lastPage: users.lastPage,
+          },
+        })
       },
       {
         summary: 'List users',
         query: PaginationQuery,
-        responses: { 200: { schema: Type.Array(User) } },
+        responses: { 200: { schema: PaginatedUsers } },
       }
     ),
 
@@ -137,7 +145,7 @@ export const usersController = defineController(
       async ({ params, reply }) => {
         const user = await User.find(params.id)  // params.id is typed
         if (!user) return reply.notFound('User not found')
-        return reply.ok(user)
+        return reply.ok(user.serialize())
       },
       {
         summary: 'Get user by ID',
@@ -148,7 +156,7 @@ export const usersController = defineController(
     createUser: post('/',
       async ({ body, reply }) => {
         const user = await User.create(body)
-        return reply.created(user)
+        return reply.created(user.serialize())
       },
       {
         summary: 'Create user',
@@ -176,65 +184,79 @@ export const usersController = defineController(
 )
 ```
 
-## Lucid ORM Integration
+## Working with Lucid Models
 
-The adapter automatically serializes Lucid models and paginators.
+Lucid's `serialize()` method returns `ModelObject`, which doesn't match your TypeBox schema types. You have two options to handle this:
 
-### Model Serialization
+### Option 1: Add a typed `toResponse()` method (Recommended)
 
-Lucid models are serialized using their `serialize()` method or `toResponse()` if defined:
+Add a method to your model that returns the correct type:
 
 ```typescript
-// app/models/book.ts
-export default class Book extends BaseModel {
+// app/models/user.ts
+import { BaseModel, column } from '@adonisjs/lucid/orm'
+import { Static } from '@sinclair/typebox'
+import { UserSchema } from '#schemas/user'
+
+export default class User extends BaseModel {
   @column({ isPrimary: true })
   declare id: string
 
   @column()
-  declare title: string
+  declare name: string
 
-  // Custom serialization
-  toResponse() {
+  @column()
+  declare email: string
+
+  @column({ serializeAs: null })
+  declare password: string
+
+  toResponse(): Static<typeof UserSchema> {
     return {
       id: this.id,
-      title: this.title,
-      url: `/books/${this.id}`,
+      name: this.name,
+      email: this.email,
     }
   }
 }
 ```
 
-### Paginator Support
-
-Lucid paginators are automatically serialized:
+Then use it in your handlers:
 
 ```typescript
-const listBooks = get('/',
-  async ({ query, reply }) => {
-    const books = await Book.query().paginate(query.page, 20)
-    return reply.ok(books)
+const getUser = get('/:id',
+  async ({ params, reply, error }) => {
+    const user = await User.find(params.id)
+    if (!user) return error.notFound()
+    return reply.ok(user.toResponse())
   },
-  {
-    query: Type.Object({
-      page: Type.Optional(Type.Integer({ minimum: 1, default: 1 })),
-    }),
-    responses: { 200: { schema: PaginatedBooks } },
-  }
+  { responses: { 200: { schema: UserSchema }, 404: null } }
 )
 ```
 
-Output:
-```json
-{
-  "data": [{ "id": "1", "title": "..." }],
-  "meta": {
-    "total": 100,
-    "perPage": 20,
-    "currentPage": 1,
-    "lastPage": 5
-  }
-}
+### Option 2: Type assertion
+
+For quick fixes, use type assertions:
+
+```typescript
+import { Static } from '@sinclair/typebox'
+
+const getUser = get('/:id',
+  async ({ params, reply, error }) => {
+    const user = await User.find(params.id)
+    if (!user) return error.notFound()
+    return reply.ok(user.serialize() as Static<typeof UserSchema>)
+  },
+  { responses: { 200: { schema: UserSchema }, 404: null } }
+)
 ```
+
+::: tip Recommendation
+The `toResponse()` method approach is preferred because it:
+- Provides compile-time type checking
+- Makes it explicit which fields are exposed in your API
+- Keeps serialization logic in the model where it belongs
+:::
 
 ## Authentication
 
@@ -245,7 +267,7 @@ const createBook = post('/',
   async ({ body, user, reply }) => {
     // user is available when auth is required
     const book = await user.related('books').create(body)
-    return reply.created(book)
+    return reply.created(book.toResponse())
   },
   {
     auth: 'required',
@@ -303,28 +325,6 @@ export default class AppProvider {
     })
   }
 }
-```
-
-## Serializers
-
-Built-in serializers handle common data types:
-
-| Serializer | Priority | Handles |
-|------------|----------|---------|
-| `paginatorSerializer` | 150 | Lucid paginators |
-| `typedModelSerializer` | 100 | Objects with `toResponse()` |
-| `lucidModelSerializer` | 50 | Lucid models |
-| `serializableSerializer` | 25 | Objects with `serialize()` |
-
-Access serializers:
-
-```typescript
-import {
-  isLucidModel,
-  isTypedModel,
-  isPaginator,
-  lucidSerializers,
-} from '@kontract/adonis'
 ```
 
 ## OpenAPI Generation
@@ -455,10 +455,6 @@ import {
   // Validation
   validate, createAjvValidator, AjvValidationError,
 
-  // Serializers
-  isLucidModel, isTypedModel, isPaginator,
-  lucidSerializers,
-
   // OpenAPI
   buildOpenApiSpec,
 
@@ -474,4 +470,3 @@ import {
 
 - `@adonisjs/core` ^6.0.0
 - `@sinclair/typebox` >=0.32.0
-- `@adonisjs/lucid` ^21.0.0 (optional, for serializers)

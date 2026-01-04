@@ -432,6 +432,28 @@ app.use(createErrorHandler())
 app.listen(3000)
 ```
 
+```typescript [Koa]
+// app.ts
+import Koa from 'koa'
+import Router from '@koa/router'
+import bodyParser from 'koa-bodyparser'
+import { registerController, createErrorHandler } from '@kontract/koa'
+import { usersController } from './controllers/users.js'
+
+const app = new Koa()
+const router = new Router()
+
+app.use(bodyParser())
+app.use(createErrorHandler())  // Error handler FIRST in Koa
+
+registerController(router, usersController)
+
+app.use(router.routes())
+app.use(router.allowedMethods())
+
+app.listen(3000)
+```
+
 ```typescript [AdonisJS]
 // start/routes.ts
 import router from '@adonisjs/core/services/router'

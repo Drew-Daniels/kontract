@@ -29,14 +29,6 @@ import {
   isApiResponse,
   noContent,
 } from 'kontract'
-import {
-  isLucidModel,
-  isTypedModel,
-  isPaginator,
-  serializePaginator,
-  type SerializableModel,
-  type ResponseModel,
-} from '../serializers/lucid.js'
 
 // Re-export noContent for convenience
 export { noContent }
@@ -74,16 +66,11 @@ import type { ResponseSchemaFor } from 'kontract'
 // ============================================================================
 
 /**
- * Data that can be serialized: plain objects matching the schema, Lucid models, or arrays of models.
- */
-type SerializableData<T> = T | SerializableModel | ResponseModel | SerializableModel[] | ResponseModel[]
-
-/**
  * Helper type to create a typed response function for a specific status code.
  */
 type TypedHelper<TResponses, Status extends number>
   = ResponseSchemaFor<TResponses, Status> extends TSchema
-    ? (data: SerializableData<Static<ResponseSchemaFor<TResponses, Status>>>) => ApiResponse<Status, Static<ResponseSchemaFor<TResponses, Status>>>
+    ? (data: Static<ResponseSchemaFor<TResponses, Status>>) => ApiResponse<Status, Static<ResponseSchemaFor<TResponses, Status>>>
     : never
 
 /**
@@ -473,44 +460,8 @@ export function del<
 }
 
 // ============================================================================
-// AdonisJS-Specific Serialization
+// Response Handling
 // ============================================================================
-
-/**
- * Serialize response data if it's a Lucid model, TypedModel, or paginator.
- */
-function serializeData(data: unknown): unknown {
-  // Paginator (must check before model since paginators contain models)
-  if (isPaginator(data)) {
-    return serializePaginator(data)
-  }
-
-  // TypedModel (has toResponse method)
-  if (isTypedModel(data)) {
-    return data.toResponse()
-  }
-
-  // Lucid model (has serialize method)
-  if (isLucidModel(data)) {
-    return data.serialize()
-  }
-
-  // Array of models
-  if (Array.isArray(data)) {
-    return data.map((item) => serializeData(item))
-  }
-
-  // Plain object - recursively serialize nested models
-  if (data !== null && typeof data === 'object' && !Buffer.isBuffer(data)) {
-    const serialized: Record<string, unknown> = {}
-    for (const [key, value] of Object.entries(data)) {
-      serialized[key] = serializeData(value)
-    }
-    return serialized
-  }
-
-  return data
-}
 
 /**
  * Handle the response from a route handler.
@@ -530,9 +481,7 @@ function handleResponse(ctx: HttpContext, result: unknown): unknown {
     if (result.status === 204) {
       return ctx.response.noContent()
     }
-    // Serialize Lucid models before sending
-    const serializedData = serializeData(result.data)
-    return ctx.response.status(result.status).json(serializedData)
+    return ctx.response.status(result.status).json(result.data)
   }
 
   // Raw result (fallback)
