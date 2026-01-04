@@ -34,6 +34,7 @@
     "lint": "eslint src/",
     "lint:fix": "eslint src/ --fix",
     "clean": "rm -rf dist",
+    "test": "TSX_TSCONFIG_PATH=tsconfig.test.json node --import=tsx bin/test.ts",
     "demo": "tsx demo/index.ts",
     "demo:watch": "tsx watch demo/index.ts"
   },
@@ -42,6 +43,8 @@
     "@kontract/ajv": "*"
   },
   "devDependencies": {
+    "@japa/assert": "^4.2.0",
+    "@japa/runner": "^4.4.0",
     "@koa/router": "^15.0.0",
     "@sinclair/typebox": "^0.34.33",
     "@types/koa": "^2.15.0",

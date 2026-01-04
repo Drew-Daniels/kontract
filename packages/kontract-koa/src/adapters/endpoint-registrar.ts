@@ -19,6 +19,7 @@ import {
   type ResponsesConfig,
   type ReplyHelpers,
   type ErrorHelpers,
+  type ParamsFromPath,
   getControllerRoutes,
   isBinaryResponse,
   parseRouteString,
@@ -66,8 +67,12 @@ export interface RegisterControllerOptions {
 /**
  * Extended handler context for Koa with typed body, query, params,
  * AND namespaced response helpers derived from the responses config.
+ *
+ * Path parameters are automatically inferred from the route path when
+ * no explicit params schema is provided.
  */
 export interface KoaHandlerContext<
+  TPath extends string = string,
   TBody extends TSchema | undefined = undefined,
   TQuery extends TSchema | undefined = undefined,
   TParams extends TSchema | undefined = undefined,
@@ -77,8 +82,8 @@ export interface KoaHandlerContext<
   body: TBody extends TSchema ? Static<TBody> : undefined
   /** Validated query parameters (typed from query schema) */
   query: TQuery extends TSchema ? Static<TQuery> : undefined
-  /** Validated path parameters (typed from params schema) */
-  params: TParams extends TSchema ? Static<TParams> : undefined
+  /** Validated path parameters (inferred from path or explicit schema) */
+  params: TParams extends TSchema ? Static<TParams> : ParamsFromPath<TPath>
   /** Authenticated user (available when auth is 'required' or 'optional') */
   user: unknown
   /** Raw Koa context (framework-specific) */
@@ -96,11 +101,12 @@ export interface KoaHandlerContext<
  * Handler function type for Koa routes.
  */
 export type KoaRouteHandler<
+  TPath extends string = string,
   TBody extends TSchema | undefined = undefined,
   TQuery extends TSchema | undefined = undefined,
   TParams extends TSchema | undefined = undefined,
   TResponses extends ResponsesConfig = ResponsesConfig,
-> = (ctx: KoaHandlerContext<TBody, TQuery, TParams, TResponses>) => Promise<AnyResponse> | AnyResponse
+> = (ctx: KoaHandlerContext<TPath, TBody, TQuery, TParams, TResponses>) => Promise<AnyResponse> | AnyResponse
 
 /**
  * Extended RouteConfig for Koa.
@@ -192,7 +198,7 @@ export function defineKoaRoute<
   TResponses extends ResponsesConfig = ResponsesConfig,
 >(
   config: KoaRouteConfig<TBody, TQuery, TParams, TResponses>,
-  handler: KoaRouteHandler<TBody, TQuery, TParams, TResponses>,
+  handler: KoaRouteHandler<TPath, TBody, TQuery, TParams, TResponses>,
 ): KoaRouteDefinition<TPath, TBody, TQuery, TParams> {
   const [method, path] = parseRouteString(config.route as RouteString)
 
@@ -256,12 +262,12 @@ export function get<
   TResponses extends ResponsesConfig = ResponsesConfig,
 >(
   path: TPath,
-  handler: KoaRouteHandler<undefined, TQuery, TParams, TResponses>,
+  handler: KoaRouteHandler<TPath, undefined, TQuery, TParams, TResponses>,
   options: GetRouteOptions<TQuery, TParams, TResponses>,
 ): KoaRouteDefinition<TPath, undefined, TQuery, TParams> {
   return defineKoaRoute<TPath, undefined, TQuery, TParams, TResponses>(
     { ...options, route: `GET ${path}` } as KoaRouteConfig<undefined, TQuery, TParams, TResponses>,
-    handler,
+    handler as KoaRouteHandler<string, undefined, TQuery, TParams, TResponses>,
   )
 }
 
@@ -294,12 +300,12 @@ export function post<
   TResponses extends ResponsesConfig = ResponsesConfig,
 >(
   path: TPath,
-  handler: KoaRouteHandler<TBody, TQuery, TParams, TResponses>,
+  handler: KoaRouteHandler<TPath, TBody, TQuery, TParams, TResponses>,
   options: BodyRouteOptions<TBody, TQuery, TParams, TResponses>,
 ): KoaRouteDefinition<TPath, TBody, TQuery, TParams> {
   return defineKoaRoute<TPath, TBody, TQuery, TParams, TResponses>(
     { ...options, route: `POST ${path}` } as KoaRouteConfig<TBody, TQuery, TParams, TResponses>,
-    handler,
+    handler as KoaRouteHandler<string, TBody, TQuery, TParams, TResponses>,
   )
 }
 
@@ -332,12 +338,12 @@ export function put<
   TResponses extends ResponsesConfig = ResponsesConfig,
 >(
   path: TPath,
-  handler: KoaRouteHandler<TBody, TQuery, TParams, TResponses>,
+  handler: KoaRouteHandler<TPath, TBody, TQuery, TParams, TResponses>,
   options: BodyRouteOptions<TBody, TQuery, TParams, TResponses>,
 ): KoaRouteDefinition<TPath, TBody, TQuery, TParams> {
   return defineKoaRoute<TPath, TBody, TQuery, TParams, TResponses>(
     { ...options, route: `PUT ${path}` } as KoaRouteConfig<TBody, TQuery, TParams, TResponses>,
-    handler,
+    handler as KoaRouteHandler<string, TBody, TQuery, TParams, TResponses>,
   )
 }
 
@@ -370,12 +376,12 @@ export function patch<
   TResponses extends ResponsesConfig = ResponsesConfig,
 >(
   path: TPath,
-  handler: KoaRouteHandler<TBody, TQuery, TParams, TResponses>,
+  handler: KoaRouteHandler<TPath, TBody, TQuery, TParams, TResponses>,
   options: BodyRouteOptions<TBody, TQuery, TParams, TResponses>,
 ): KoaRouteDefinition<TPath, TBody, TQuery, TParams> {
   return defineKoaRoute<TPath, TBody, TQuery, TParams, TResponses>(
     { ...options, route: `PATCH ${path}` } as KoaRouteConfig<TBody, TQuery, TParams, TResponses>,
-    handler,
+    handler as KoaRouteHandler<string, TBody, TQuery, TParams, TResponses>,
   )
 }
 
@@ -405,12 +411,12 @@ export function del<
   TResponses extends ResponsesConfig = ResponsesConfig,
 >(
   path: TPath,
-  handler: KoaRouteHandler<undefined, TQuery, TParams, TResponses>,
+  handler: KoaRouteHandler<TPath, undefined, TQuery, TParams, TResponses>,
   options: GetRouteOptions<TQuery, TParams, TResponses>,
 ): KoaRouteDefinition<TPath, undefined, TQuery, TParams> {
   return defineKoaRoute<TPath, undefined, TQuery, TParams, TResponses>(
     { ...options, route: `DELETE ${path}` } as KoaRouteConfig<undefined, TQuery, TParams, TResponses>,
-    handler,
+    handler as KoaRouteHandler<string, undefined, TQuery, TParams, TResponses>,
   )
 }
 

@@ -39,8 +39,8 @@
     "demo:watch": "node --watch --import=tsx demo/bin/server.ts"
   },
   "dependencies": {
-    "kontract": "*",
-    "@kontract/ajv": "*"
+    "@kontract/ajv": "*",
+    "kontract": "*"
   },
   "devDependencies": {
     "@adonisjs/core": "^6.18.0",

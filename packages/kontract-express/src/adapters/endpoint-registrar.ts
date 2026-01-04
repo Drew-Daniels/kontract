@@ -18,6 +18,7 @@ import {
   type ResponsesConfig,
   type ReplyHelpers,
   type ErrorHelpers,
+  type ParamsFromPath,
   getControllerRoutes,
   isBinaryResponse,
   parseRouteString,
@@ -64,8 +65,12 @@ export interface RegisterControllerOptions {
 /**
  * Extended handler context for Express with typed body, query, params,
  * AND namespaced response helpers derived from the responses config.
+ *
+ * Path parameters are automatically inferred from the route path when
+ * no explicit params schema is provided.
  */
 export interface ExpressHandlerContext<
+  TPath extends string = string,
   TBody extends TSchema | undefined = undefined,
   TQuery extends TSchema | undefined = undefined,
   TParams extends TSchema | undefined = undefined,
@@ -75,8 +80,8 @@ export interface ExpressHandlerContext<
   body: TBody extends TSchema ? Static<TBody> : undefined
   /** Validated query parameters (typed from query schema) */
   query: TQuery extends TSchema ? Static<TQuery> : undefined
-  /** Validated path parameters (typed from params schema) */
-  params: TParams extends TSchema ? Static<TParams> : undefined
+  /** Validated path parameters (inferred from path or explicit schema) */
+  params: TParams extends TSchema ? Static<TParams> : ParamsFromPath<TPath>
   /** Authenticated user (available when auth is 'required' or 'optional') */
   user: unknown
   /** Raw Express request (framework-specific) */
@@ -94,11 +99,12 @@ export interface ExpressHandlerContext<
  * Handler function type for Express routes.
  */
 export type ExpressRouteHandler<
+  TPath extends string = string,
   TBody extends TSchema | undefined = undefined,
   TQuery extends TSchema | undefined = undefined,
   TParams extends TSchema | undefined = undefined,
   TResponses extends ResponsesConfig = ResponsesConfig,
-> = (ctx: ExpressHandlerContext<TBody, TQuery, TParams, TResponses>) => Promise<AnyResponse> | AnyResponse
+> = (ctx: ExpressHandlerContext<TPath, TBody, TQuery, TParams, TResponses>) => Promise<AnyResponse> | AnyResponse
 
 /**
  * Extended RouteConfig for Express.
@@ -187,7 +193,7 @@ export function defineExpressRoute<
   TResponses extends ResponsesConfig = ResponsesConfig,
 >(
   config: ExpressRouteConfig<TBody, TQuery, TParams, TResponses>,
-  handler: ExpressRouteHandler<TBody, TQuery, TParams, TResponses>,
+  handler: ExpressRouteHandler<TPath, TBody, TQuery, TParams, TResponses>,
 ): ExpressRouteDefinition<TPath, TBody, TQuery, TParams> {
   const [method, path] = parseRouteString(config.route as RouteString)
 
@@ -251,12 +257,12 @@ export function get<
   TResponses extends ResponsesConfig = ResponsesConfig,
 >(
   path: TPath,
-  handler: ExpressRouteHandler<undefined, TQuery, TParams, TResponses>,
+  handler: ExpressRouteHandler<TPath, undefined, TQuery, TParams, TResponses>,
   options: GetRouteOptions<TQuery, TParams, TResponses>,
 ): ExpressRouteDefinition<TPath, undefined, TQuery, TParams> {
   return defineExpressRoute<TPath, undefined, TQuery, TParams, TResponses>(
     { ...options, route: `GET ${path}` } as ExpressRouteConfig<undefined, TQuery, TParams, TResponses>,
-    handler,
+    handler as ExpressRouteHandler<string, undefined, TQuery, TParams, TResponses>,
   )
 }
 
@@ -289,12 +295,12 @@ export function post<
   TResponses extends ResponsesConfig = ResponsesConfig,
 >(
   path: TPath,
-  handler: ExpressRouteHandler<TBody, TQuery, TParams, TResponses>,
+  handler: ExpressRouteHandler<TPath, TBody, TQuery, TParams, TResponses>,
   options: BodyRouteOptions<TBody, TQuery, TParams, TResponses>,
 ): ExpressRouteDefinition<TPath, TBody, TQuery, TParams> {
   return defineExpressRoute<TPath, TBody, TQuery, TParams, TResponses>(
     { ...options, route: `POST ${path}` } as ExpressRouteConfig<TBody, TQuery, TParams, TResponses>,
-    handler,
+    handler as ExpressRouteHandler<string, TBody, TQuery, TParams, TResponses>,
   )
 }
 
@@ -327,12 +333,12 @@ export function put<
   TResponses extends ResponsesConfig = ResponsesConfig,
 >(
   path: TPath,
-  handler: ExpressRouteHandler<TBody, TQuery, TParams, TResponses>,
+  handler: ExpressRouteHandler<TPath, TBody, TQuery, TParams, TResponses>,
   options: BodyRouteOptions<TBody, TQuery, TParams, TResponses>,
 ): ExpressRouteDefinition<TPath, TBody, TQuery, TParams> {
   return defineExpressRoute<TPath, TBody, TQuery, TParams, TResponses>(
     { ...options, route: `PUT ${path}` } as ExpressRouteConfig<TBody, TQuery, TParams, TResponses>,
-    handler,
+    handler as ExpressRouteHandler<string, TBody, TQuery, TParams, TResponses>,
   )
 }
 
@@ -365,12 +371,12 @@ export function patch<
   TResponses extends ResponsesConfig = ResponsesConfig,
 >(
   path: TPath,
-  handler: ExpressRouteHandler<TBody, TQuery, TParams, TResponses>,
+  handler: ExpressRouteHandler<TPath, TBody, TQuery, TParams, TResponses>,
   options: BodyRouteOptions<TBody, TQuery, TParams, TResponses>,
 ): ExpressRouteDefinition<TPath, TBody, TQuery, TParams> {
   return defineExpressRoute<TPath, TBody, TQuery, TParams, TResponses>(
     { ...options, route: `PATCH ${path}` } as ExpressRouteConfig<TBody, TQuery, TParams, TResponses>,
-    handler,
+    handler as ExpressRouteHandler<string, TBody, TQuery, TParams, TResponses>,
   )
 }
 
@@ -400,12 +406,12 @@ export function del<
   TResponses extends ResponsesConfig = ResponsesConfig,
 >(
   path: TPath,
-  handler: ExpressRouteHandler<undefined, TQuery, TParams, TResponses>,
+  handler: ExpressRouteHandler<TPath, undefined, TQuery, TParams, TResponses>,
   options: GetRouteOptions<TQuery, TParams, TResponses>,
 ): ExpressRouteDefinition<TPath, undefined, TQuery, TParams> {
   return defineExpressRoute<TPath, undefined, TQuery, TParams, TResponses>(
     { ...options, route: `DELETE ${path}` } as ExpressRouteConfig<undefined, TQuery, TParams, TResponses>,
-    handler,
+    handler as ExpressRouteHandler<string, undefined, TQuery, TParams, TResponses>,
   )
 }
 
