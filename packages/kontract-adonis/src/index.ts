@@ -9,17 +9,17 @@
  * import { get, post, Type, registerController, defineController } from '@kontract/adonis'
  *
  * const getUser = get('/api/v1/users/:id',
- *   async ({ params, reply, error }) => {
- *     const user = await User.find(params.id)
- *     if (!user) return error.notFound('User not found')
- *     return reply.ok(user.serialize())
- *   },
  *   {
  *     params: Type.Object({ id: Type.String() }),
  *     responses: {
  *       200: { schema: UserResponse },
  *       404: { schema: ApiError },
  *     },
+ *   },
+ *   async ({ params, reply, error }) => {
+ *     const user = await User.find(params.id)
+ *     if (!user) return error.notFound('User not found')
+ *     return reply.ok(user.serialize())
  *   }
  * )
  *

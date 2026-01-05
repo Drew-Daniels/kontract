@@ -42,6 +42,23 @@ export interface ResponseHeader {
 }
 
 /**
+ * Request header definition for OpenAPI.
+ * Describes headers expected in the request.
+ */
+export interface RequestHeader {
+  /** Header name (e.g., 'X-API-Key', 'X-Request-ID') */
+  name: string
+  /** Header description */
+  description?: string
+  /** Header schema (typically Type.String()) */
+  schema: TSchema
+  /** Whether this header is required (default: false) */
+  required?: boolean
+  /** Example value */
+  example?: string
+}
+
+/**
  * Response definition for an endpoint.
  * Generic parameter T is inferred from the schema for type-safe examples.
  *
@@ -68,6 +85,12 @@ export interface ResponseDefinition<T extends TSchema | null = TSchema | null> {
   schema: T
   /** Description of this response (for OpenAPI docs) */
   description?: string
+  /**
+   * Content type for this response (default: 'application/json').
+   * Use 'application/octet-stream' for binary downloads,
+   * 'application/zip' for ZIP files, etc.
+   */
+  contentType?: string
   /** Response headers */
   headers?: Record<string, ResponseHeader>
   /** Multiple named examples (type-checked against schema) */
@@ -130,6 +153,8 @@ export interface EndpointMetadata {
   query?: TSchema
   /** Path parameters schema */
   params?: TSchema
+  /** Request headers (custom headers beyond Authorization) */
+  headers?: RequestHeader[]
   /** File upload configuration */
   file?: FileUploadConfig
   /** Response definitions by status code */

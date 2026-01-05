@@ -223,22 +223,60 @@ export function defineHonoRoute<
 
 /**
  * Options for GET and DELETE routes (no body).
+ * Explicitly defines all properties to ensure proper generic inference.
  */
-export type GetRouteOptions<
+export interface GetRouteOptions<
   TQuery extends TSchema | undefined = undefined,
   TParams extends TSchema | undefined = undefined,
   TResponses extends ResponsesConfig = ResponsesConfig,
-> = Omit<HonoRouteConfig<undefined, TQuery, TParams, TResponses>, 'route' | 'body'>
+> {
+  /** Short summary for OpenAPI docs */
+  summary?: string
+  /** Detailed description for OpenAPI docs */
+  description?: string
+  /** Unique operation ID for OpenAPI */
+  operationId?: string
+  /** Mark route as deprecated */
+  deprecated?: boolean
+  /** Authentication requirement */
+  auth?: 'required' | 'optional' | 'none'
+  /** Query parameters schema */
+  query?: TQuery
+  /** Path parameters schema (optional - auto-inferred from path) */
+  params?: TParams
+  /** Response definitions for this route - REQUIRED for proper type inference */
+  responses: TResponses
+}
 
 /**
  * Options for POST, PUT, PATCH routes (with body).
+ * Explicitly defines all properties to ensure proper generic inference.
  */
-export type BodyRouteOptions<
+export interface BodyRouteOptions<
   TBody extends TSchema | undefined = undefined,
   TQuery extends TSchema | undefined = undefined,
   TParams extends TSchema | undefined = undefined,
   TResponses extends ResponsesConfig = ResponsesConfig,
-> = Omit<HonoRouteConfig<TBody, TQuery, TParams, TResponses>, 'route'>
+> {
+  /** Short summary for OpenAPI docs */
+  summary?: string
+  /** Detailed description for OpenAPI docs */
+  description?: string
+  /** Unique operation ID for OpenAPI */
+  operationId?: string
+  /** Mark route as deprecated */
+  deprecated?: boolean
+  /** Authentication requirement */
+  auth?: 'required' | 'optional' | 'none'
+  /** Request body schema */
+  body?: TBody
+  /** Query parameters schema */
+  query?: TQuery
+  /** Path parameters schema (optional - auto-inferred from path) */
+  params?: TParams
+  /** Response definitions for this route - REQUIRED for proper type inference */
+  responses: TResponses
+}
 
 /**
  * Define a GET route with Elysia-style API.

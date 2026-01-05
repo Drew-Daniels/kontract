@@ -1,6 +1,6 @@
 {
   "name": "kontract",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Framework-agnostic type-safe API contracts with TypeBox schema support",
   "type": "module",
   "main": "./dist/index.js",

@@ -19,6 +19,7 @@ import {
   type HttpMethod,
   type RouteString,
   type ResponsesConfig,
+  type RequestHeader,
   getControllerRoutes,
   isBinaryResponse,
   type ParamsFromPath,
@@ -259,22 +260,75 @@ export function defineAdonisRoute<
 
 /**
  * Options for GET and DELETE routes (no body).
+ * Explicitly defines all properties to ensure proper generic inference.
  */
-export type GetRouteOptions<
+export interface GetRouteOptions<
   TQuery extends TSchema | undefined = undefined,
   TParams extends TSchema | undefined = undefined,
   TResponses extends ResponsesConfig = ResponsesConfig,
-> = Omit<AdonisRouteConfig<undefined, TQuery, TParams, TResponses>, 'route' | 'body'>
+> {
+  /** Short summary for OpenAPI docs */
+  summary?: string
+  /** Detailed description for OpenAPI docs */
+  description?: string
+  /** Unique operation ID for OpenAPI */
+  operationId?: string
+  /** Mark route as deprecated */
+  deprecated?: boolean
+  /** Authentication requirement */
+  auth?: 'required' | 'optional' | 'none'
+  /** Query parameters schema */
+  query?: TQuery
+  /** Path parameters schema (optional - auto-inferred from path) */
+  params?: TParams
+  /** Request headers (custom headers beyond Authorization) */
+  headers?: RequestHeader[]
+  /** AdonisJS middleware to apply to this route */
+  middleware?: Middleware[]
+  /** Response definitions for this route - REQUIRED for proper type inference */
+  responses: TResponses
+}
 
 /**
  * Options for POST, PUT, PATCH routes (with body).
+ * Explicitly defines all properties to ensure proper generic inference.
  */
-export type BodyRouteOptions<
+export interface BodyRouteOptions<
   TBody extends TSchema | undefined = undefined,
   TQuery extends TSchema | undefined = undefined,
   TParams extends TSchema | undefined = undefined,
   TResponses extends ResponsesConfig = ResponsesConfig,
-> = Omit<AdonisRouteConfig<TBody, TQuery, TParams, TResponses>, 'route'>
+> {
+  /** Short summary for OpenAPI docs */
+  summary?: string
+  /** Detailed description for OpenAPI docs */
+  description?: string
+  /** Unique operation ID for OpenAPI */
+  operationId?: string
+  /** Mark route as deprecated */
+  deprecated?: boolean
+  /** Authentication requirement */
+  auth?: 'required' | 'optional' | 'none'
+  /** Request body schema */
+  body?: TBody
+  /** Query parameters schema */
+  query?: TQuery
+  /** Path parameters schema (optional - auto-inferred from path) */
+  params?: TParams
+  /** Request headers (custom headers beyond Authorization) */
+  headers?: RequestHeader[]
+  /**
+   * Mark this route as multipart/form-data for file uploads.
+   * When true:
+   * - OpenAPI spec uses multipart/form-data content type
+   * - Body validation is skipped (files handled by AdonisJS request.file())
+   */
+  multipart?: boolean
+  /** AdonisJS middleware to apply to this route */
+  middleware?: Middleware[]
+  /** Response definitions for this route - REQUIRED for proper type inference */
+  responses: TResponses
+}
 
 /**
  * Define a GET route with Elysia-style API.
@@ -527,7 +581,8 @@ function createHandler(
     let query: unknown
     let params: unknown
 
-    if (route.config.body) {
+    // Skip body validation for multipart routes (files are handled by AdonisJS request.file())
+    if (route.config.body && !route.config.multipart) {
       body = validate(route.config.body, ctx.request.body())
     }
     if (route.config.query) {

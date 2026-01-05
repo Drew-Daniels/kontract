@@ -1,6 +1,6 @@
 import type { TSchema } from '@sinclair/typebox'
 import { Value } from '@sinclair/typebox/value'
-import type { ResponseDefinition, ResponseHeader } from '../metadata/types.js'
+import type { ResponseDefinition, ResponseHeader, RequestHeader } from '../metadata/types.js'
 import type { ControllerDefinition, AnyRouteDefinition } from './define-controller.js'
 import type {
   OpenApiDocument,
@@ -221,6 +221,21 @@ export class OpenApiBuilder {
       }
     }
 
+    // Request headers
+    const headersConfig = routeConfig.headers as RequestHeader[] | undefined
+    if (headersConfig) {
+      for (const header of headersConfig) {
+        parameters.push({
+          name: header.name,
+          in: 'header',
+          required: header.required ?? false,
+          ...(header.description && { description: header.description }),
+          schema: this.toJsonSchema(header.schema) as OpenApiSchema,
+          ...(header.example && { example: header.example }),
+        })
+      }
+    }
+
     if (parameters.length > 0) {
       operation.parameters = parameters
     }
@@ -229,11 +244,12 @@ export class OpenApiBuilder {
     if (routeConfig.body) {
       const schemaName = this.registerSchema(routeConfig.body)
       const bodyDescription = (routeConfig.body as Record<string, unknown>).description as string | undefined
+      const contentType = routeConfig.multipart ? 'multipart/form-data' : 'application/json'
       operation.requestBody = {
         required: true,
         ...(bodyDescription && { description: bodyDescription }),
         content: {
-          'application/json': {
+          [contentType]: {
             schema: { $ref: `#/components/schemas/${schemaName}` },
           },
         },
@@ -265,8 +281,9 @@ export class OpenApiBuilder {
 
       if (typedResponse.schema !== null) {
         const schemaName = this.registerSchema(typedResponse.schema)
+        const responseContentType = typedResponse.contentType ?? 'application/json'
         openApiResponse.content = {
-          'application/json': {
+          [responseContentType]: {
             schema: { $ref: `#/components/schemas/${schemaName}` },
             ...(typedResponse.example !== undefined && { example: typedResponse.example }),
             ...(typedResponse.examples && { examples: this.formatExamples(typedResponse.examples) }),

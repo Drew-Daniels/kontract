@@ -35,6 +35,7 @@ export type {
   ResponseDefinition,
   ResponseExample,
   ResponseHeader,
+  RequestHeader,
   FileUploadConfig,
   ApiMetadata,
   EndpointMetadata,

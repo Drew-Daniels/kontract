@@ -18,7 +18,7 @@
  */
 import type { TSchema, Static } from '@sinclair/typebox'
 import type { AnyResponse } from '../response/types.js'
-import type { HttpMethod, AuthLevel, ResponseDefinition } from '../metadata/types.js'
+import type { HttpMethod, AuthLevel, ResponseDefinition, RequestHeader } from '../metadata/types.js'
 
 /**
  * Route string format: "METHOD /path"
@@ -65,6 +65,15 @@ export interface RouteConfig<
   query?: TQuery
   /** Path parameters schema */
   params?: TParams
+  /** Request headers (custom headers beyond Authorization) */
+  headers?: RequestHeader[]
+  /**
+   * Mark this route as multipart/form-data for file uploads.
+   * When true:
+   * - OpenAPI spec uses multipart/form-data content type
+   * - Body validation is skipped (files handled by framework's file upload mechanism)
+   */
+  multipart?: boolean
   /** Response definitions by status code */
   responses: ResponsesConfig
 }
