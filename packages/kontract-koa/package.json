@@ -39,8 +39,8 @@
     "demo:watch": "tsx watch demo/index.ts"
   },
   "dependencies": {
-    "kontract": "*",
-    "@kontract/ajv": "*"
+    "kontract": "^0.4.0",
+    "@kontract/ajv": "^0.1.0"
   },
   "devDependencies": {
     "@japa/assert": "^4.2.0",
