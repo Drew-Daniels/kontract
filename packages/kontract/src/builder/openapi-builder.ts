@@ -206,15 +206,38 @@ export class OpenApiBuilder {
     }
 
     // Query parameters (cast to object schema to access properties)
-    const queryObj = routeConfig.query as { properties?: Record<string, TSchema>; required?: string[] } | undefined
-    if (queryObj?.properties) {
-      const required = new Set<string>(queryObj.required ?? [])
-      for (const [name, propSchema] of Object.entries(queryObj.properties)) {
+    // Handle both simple Type.Object and Type.Intersect (allOf)
+    const queryObj = routeConfig.query as {
+      properties?: Record<string, TSchema>
+      required?: string[]
+      allOf?: Array<{ properties?: Record<string, TSchema>; required?: string[] }>
+    } | undefined
+    if (queryObj) {
+      const allProperties: Record<string, TSchema> = {}
+      const allRequired = new Set<string>()
+
+      // Collect properties from direct object
+      if (queryObj.properties) {
+        Object.assign(allProperties, queryObj.properties)
+        queryObj.required?.forEach((r) => allRequired.add(r))
+      }
+
+      // Collect properties from allOf (Type.Intersect)
+      if (queryObj.allOf) {
+        for (const schema of queryObj.allOf) {
+          if (schema.properties) {
+            Object.assign(allProperties, schema.properties)
+          }
+          schema.required?.forEach((r) => allRequired.add(r))
+        }
+      }
+
+      for (const [name, propSchema] of Object.entries(allProperties)) {
         const prop = propSchema as TSchema
         parameters.push({
           name,
           in: 'query',
-          required: required.has(name),
+          required: allRequired.has(name),
           ...(prop.description && { description: prop.description }),
           schema: this.toJsonSchema(prop) as OpenApiSchema,
         })

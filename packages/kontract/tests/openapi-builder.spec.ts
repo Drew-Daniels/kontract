@@ -367,6 +367,79 @@ test.group('OpenApiBuilder - Example Validation', () => {
   })
 })
 
+test.group('OpenApiBuilder - Query Parameters', () => {
+  test('handles simple Type.Object query params', ({ assert }) => {
+    const listUsers = defineRoute({
+      route: 'GET /users',
+      query: Type.Object({
+        page: Type.Optional(Type.Number({ description: 'Page number' })),
+        perPage: Type.Optional(Type.Number({ description: 'Items per page' })),
+      }),
+      responses: {
+        200: { schema: Type.Array(UserSchema), description: 'Users list' },
+      },
+    }, async () => ok(Type.Array(UserSchema), []))
+
+    const controller = defineController({ tag: 'Users' }, { listUsers })
+    const builder = createBuilder()
+    builder.addController(controller)
+    const spec = builder.build()
+
+    const params = spec.paths['/users']?.get?.parameters
+    assert.exists(params)
+    assert.lengthOf(params!, 2)
+
+    const pageParam = params!.find((p) => p.name === 'page')
+    assert.exists(pageParam)
+    assert.equal(pageParam?.in, 'query')
+    assert.equal(pageParam?.required, false)
+    assert.equal(pageParam?.description, 'Page number')
+  })
+
+  test('handles Type.Intersect query params (allOf)', ({ assert }) => {
+    const PaginationParams = Type.Object({
+      page: Type.Optional(Type.Number({ description: 'Page number' })),
+      perPage: Type.Optional(Type.Number({ description: 'Items per page' })),
+    })
+    const FilterParams = Type.Object({
+      search: Type.Optional(Type.String({ description: 'Search query' })),
+      status: Type.String({ description: 'Status filter' }),
+    })
+
+    const listUsers = defineRoute({
+      route: 'GET /users',
+      query: Type.Intersect([PaginationParams, FilterParams]),
+      responses: {
+        200: { schema: Type.Array(UserSchema), description: 'Users list' },
+      },
+    }, async () => ok(Type.Array(UserSchema), []))
+
+    const controller = defineController({ tag: 'Users' }, { listUsers })
+    const builder = createBuilder()
+    builder.addController(controller)
+    const spec = builder.build()
+
+    const params = spec.paths['/users']?.get?.parameters
+    assert.exists(params)
+    assert.lengthOf(params!, 4)
+
+    // Check pagination params
+    const pageParam = params!.find((p) => p.name === 'page')
+    assert.exists(pageParam)
+    assert.equal(pageParam?.in, 'query')
+    assert.equal(pageParam?.description, 'Page number')
+
+    // Check filter params
+    const searchParam = params!.find((p) => p.name === 'search')
+    assert.exists(searchParam)
+    assert.equal(searchParam?.description, 'Search query')
+
+    const statusParam = params!.find((p) => p.name === 'status')
+    assert.exists(statusParam)
+    assert.equal(statusParam?.required, true)
+  })
+})
+
 test.group('OpenApiBuilder - No Content Response', () => {
   test('handles 204 responses without headers/examples', ({ assert }) => {
     const deleteUser = defineRoute({
