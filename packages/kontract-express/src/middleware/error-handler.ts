@@ -1,5 +1,6 @@
 import type { Request, Response, NextFunction, ErrorRequestHandler } from 'express'
 import { AjvValidationError } from '@kontract/ajv'
+import { ERROR_CODES, getErrorCode } from 'kontract'
 
 /**
  * Error with HTTP status code.
@@ -83,7 +84,7 @@ export function createErrorHandler(options: ErrorHandlerOptions = {}): ErrorRequ
     if (err instanceof AjvValidationError) {
       res.status(422).json({
         status: 422,
-        code: 'E_VALIDATION',
+        code: ERROR_CODES[422],
         message: err.message,
         errors: err.errors,
       })
@@ -91,10 +92,12 @@ export function createErrorHandler(options: ErrorHandlerOptions = {}): ErrorRequ
     }
 
     // Handle errors with status codes
+    const fallbackCode = getErrorCode(500)
+
     if (status === 401) {
       res.status(401).json({
         status: 401,
-        code: httpError.code ?? 'E_UNAUTHORIZED',
+        code: httpError.code ?? getErrorCode(401, fallbackCode),
         message: err.message || 'Unauthorized',
       })
       return
@@ -103,7 +106,7 @@ export function createErrorHandler(options: ErrorHandlerOptions = {}): ErrorRequ
     if (status === 403) {
       res.status(403).json({
         status: 403,
-        code: httpError.code ?? 'E_FORBIDDEN',
+        code: httpError.code ?? getErrorCode(403, fallbackCode),
         message: err.message || 'Forbidden',
       })
       return
@@ -112,7 +115,7 @@ export function createErrorHandler(options: ErrorHandlerOptions = {}): ErrorRequ
     if (status === 404) {
       res.status(404).json({
         status: 404,
-        code: httpError.code ?? 'E_NOT_FOUND',
+        code: httpError.code ?? getErrorCode(404, fallbackCode),
         message: err.message || 'Not Found',
       })
       return
@@ -121,7 +124,7 @@ export function createErrorHandler(options: ErrorHandlerOptions = {}): ErrorRequ
     if (status === 409) {
       res.status(409).json({
         status: 409,
-        code: httpError.code ?? 'E_CONFLICT',
+        code: httpError.code ?? getErrorCode(409, fallbackCode),
         message: err.message || 'Conflict',
       })
       return
@@ -130,7 +133,7 @@ export function createErrorHandler(options: ErrorHandlerOptions = {}): ErrorRequ
     if (status === 429) {
       res.status(429).json({
         status: 429,
-        code: httpError.code ?? 'E_RATE_LIMITED',
+        code: httpError.code ?? getErrorCode(429, fallbackCode),
         message: err.message || 'Too Many Requests',
       })
       return
@@ -139,7 +142,7 @@ export function createErrorHandler(options: ErrorHandlerOptions = {}): ErrorRequ
     // Default: Internal Server Error
     const errorResponse: Record<string, unknown> = {
       status: 500,
-      code: httpError.code ?? 'E_INTERNAL',
+      code: httpError.code ?? getErrorCode(500, fallbackCode),
       message: isDev ? err.message : 'Internal Server Error',
     }
 

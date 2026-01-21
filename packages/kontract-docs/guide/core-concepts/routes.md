@@ -121,6 +121,7 @@ method(path, options, handler)
 | `body` | `TSchema` | Request body schema (POST, PUT, PATCH only) |
 | `query` | `TSchema` | Query parameters schema |
 | `params` | `TSchema` | Path parameters schema (optional - auto-inferred from path) |
+| `multipart` | `boolean` | Treat body as multipart/form-data and skip body validation (file parsing handled by the framework) |
 | `responses` | `Record<number, ResponseDef>` | **Required.** Response definitions by status code |
 
 ## Automatic Parameter Inference

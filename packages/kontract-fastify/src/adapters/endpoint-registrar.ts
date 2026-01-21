@@ -25,6 +25,7 @@ import {
   normalizeResponses,
   createResponseHelpers,
   noContent,
+  isAuthError,
 } from 'kontract'
 
 // Re-export shared types and helpers for convenience
@@ -449,7 +450,7 @@ function registerRoute(
   // Build Fastify schema from route config
   const schema: RouteShorthandOptions['schema'] = {}
 
-  if (route.config.body) {
+  if (route.config.body && !route.config.multipart) {
     schema.body = route.config.body
   }
   if (route.config.query) {
@@ -512,8 +513,10 @@ function createHandler(
     } else if (route.config.auth === 'optional' && authenticate) {
       try {
         user = await authenticate(request)
-      } catch {
-        // Ignore auth errors for optional auth
+      } catch (err) {
+        if (!isAuthError(err)) {
+          throw err
+        }
       }
     }
 

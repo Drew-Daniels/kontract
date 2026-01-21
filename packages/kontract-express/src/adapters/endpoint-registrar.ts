@@ -19,6 +19,7 @@ import {
   type ReplyHelpers,
   type ErrorHelpers,
   type ParamsFromPath,
+  getParamsSchema,
   getControllerRoutes,
   isBinaryResponse,
   parseRouteString,
@@ -26,6 +27,7 @@ import {
   createResponseHelpers,
   isApiResponse,
   noContent,
+  isAuthError,
 } from 'kontract'
 
 // Re-export shared types and helpers for convenience
@@ -482,8 +484,10 @@ function createHandler(
       } else if (route.config.auth === 'optional' && authenticate) {
         try {
           user = await authenticate(req)
-        } catch {
-          // Ignore auth errors for optional auth
+        } catch (err) {
+          if (!isAuthError(err)) {
+            throw err
+          }
         }
       }
 
@@ -492,14 +496,16 @@ function createHandler(
       let query: unknown
       let params: unknown
 
-      if (route.config.body) {
+      if (route.config.body && !route.config.multipart) {
         body = validate(route.config.body, req.body)
       }
       if (route.config.query) {
         query = validate(route.config.query, req.query)
       }
-      if (route.config.params) {
-        params = validate(route.config.params, req.params)
+      // Use explicit params schema or auto-generate from path
+      const paramsSchema = getParamsSchema(route.path, route.config.params)
+      if (paramsSchema) {
+        params = validate(paramsSchema, req.params)
       }
 
       // 3. Create namespaced response helpers

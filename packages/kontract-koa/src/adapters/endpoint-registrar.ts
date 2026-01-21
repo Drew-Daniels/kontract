@@ -28,6 +28,7 @@ import {
   isApiResponse,
   noContent,
   getParamsSchema,
+  isAuthError,
 } from 'kontract'
 
 // Re-export shared types and helpers for convenience
@@ -486,8 +487,10 @@ function createHandler(
     } else if (route.config.auth === 'optional' && authenticate) {
       try {
         user = await authenticate(ctx)
-      } catch {
-        // Ignore auth errors for optional auth
+      } catch (err) {
+        if (!isAuthError(err)) {
+          throw err
+        }
       }
     }
 
@@ -496,7 +499,7 @@ function createHandler(
     let query: unknown
     let params: unknown
 
-    if (route.config.body) {
+    if (route.config.body && !route.config.multipart) {
       // Koa uses ctx.request.body for parsed body (via koa-bodyparser)
       body = validate(route.config.body, ctx.request.body)
     }

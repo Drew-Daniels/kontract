@@ -26,6 +26,13 @@ export const ERROR_CODES: Record<number, string> = {
   503: 'E_SERVICE_UNAVAILABLE',
 }
 
+/**
+ * Get a default error code for an HTTP status.
+ */
+export function getErrorCode(status: number, fallback = ERROR_CODES[500]): string {
+  return ERROR_CODES[status] ?? fallback
+}
+
 // ============================================================================
 // Helper Functions
 // ============================================================================

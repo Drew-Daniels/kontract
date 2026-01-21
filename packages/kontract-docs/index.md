@@ -37,6 +37,22 @@ features:
     details: Short method helpers like get(), post(), patch() keep your code concise while maintaining full type safety.
 ---
 
+## Why Kontract
+
+Kontract is for teams who want OpenAPI‑first APIs without sacrificing runtime safety or framework choice. Define routes once with TypeBox and get validation, docs, and fully typed handlers—then plug into Express, Fastify, Hono, Koa, or Adonis without rewriting your contracts.
+
+### Why TypeBox (Not Zod)
+
+- **JSON Schema native**: TypeBox emits JSON Schema directly, which aligns with OpenAPI 3.1 and Fastify’s validator.
+- **Runtime speed**: TypeBox + AJV is fast and cache-friendly for large APIs.
+- **Single-source of truth**: the same schema drives validation, OpenAPI, and TypeScript inference without adapters.
+
+### How It Compares
+
+- **Framework-native + Swagger plugins**: great for docs, but validation and types often drift. Kontract keeps validation and OpenAPI generated from the same schemas.
+- **Contract-first libraries**: strong type sharing, but usually not OpenAPI-first. Kontract treats OpenAPI as a first-class artifact for docs and client generation.
+- **Decorator-heavy frameworks**: powerful but opinionated. Kontract stays lightweight and integrates with your existing stack.
+
 ## Quick Example
 
 ```typescript

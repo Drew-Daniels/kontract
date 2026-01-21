@@ -29,6 +29,7 @@ import {
   createResponseHelpers,
   isApiResponse,
   noContent,
+  isAuthError,
 } from 'kontract'
 
 // Re-export noContent for convenience
@@ -571,8 +572,10 @@ function createHandler(
       try {
         await authCtx.auth.authenticate()
         user = authCtx.auth.user
-      } catch {
-        // Ignore auth errors for optional auth
+      } catch (err) {
+        if (!isAuthError(err)) {
+          throw err
+        }
       }
     }
 

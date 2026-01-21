@@ -5,6 +5,7 @@
  * standard API error format used by other adapters.
  */
 import type { FastifyInstance, FastifyRequest, FastifyReply, FastifyError, FastifySchemaValidationError } from 'fastify'
+import { ERROR_CODES, getErrorCode } from 'kontract'
 
 export interface ErrorHandlerOptions {
   /** Log errors to console (default: true in dev, false in prod) */
@@ -81,7 +82,7 @@ export function registerErrorHandler(
 
       return reply.status(422).send({
         status: 422,
-        code: 'E_VALIDATION',
+        code: ERROR_CODES[422],
         message: 'Validation failed',
         errors,
       })
@@ -90,19 +91,11 @@ export function registerErrorHandler(
     // Handle statusCode from thrown errors
     const statusCode = error.statusCode ?? 500
 
-    const codes: Record<number, string> = {
-      400: 'E_BAD_REQUEST',
-      401: 'E_UNAUTHORIZED',
-      403: 'E_FORBIDDEN',
-      404: 'E_NOT_FOUND',
-      409: 'E_CONFLICT',
-      422: 'E_VALIDATION',
-      429: 'E_RATE_LIMITED',
-    }
+    const fallbackCode = getErrorCode(500)
 
     const response: Record<string, unknown> = {
       status: statusCode,
-      code: codes[statusCode] ?? 'E_INTERNAL',
+      code: error.code ?? getErrorCode(statusCode, fallbackCode),
       message: statusCode < 500 ? error.message : (isDev ? error.message : 'Internal Server Error'),
     }
 

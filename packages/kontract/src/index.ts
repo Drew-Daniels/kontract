@@ -138,6 +138,7 @@ export type {
 
 export {
   ERROR_CODES,
+  getErrorCode,
   createSuccessHelper,
   createErrorHelper,
   getErrorMessage,
@@ -146,9 +147,12 @@ export {
 
 export {
   parseRouteString,
+  parseRouteStringStrict,
   normalizeResponses,
   isApiResponse,
 } from './runtime/route-utils.js'
+
+export { isAuthError } from './runtime/auth-utils.js'
 
 // ============ Validation ============
 export type {

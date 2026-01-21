@@ -1,5 +1,6 @@
 import type { Context, ErrorHandler } from 'hono'
 import { AjvValidationError } from '@kontract/ajv'
+import { ERROR_CODES, getErrorCode } from 'kontract'
 
 /**
  * Error with HTTP status code.
@@ -78,17 +79,18 @@ export function createErrorHandler(options: ErrorHandlerOptions = {}): ErrorHand
     if (err instanceof AjvValidationError) {
       return c.json({
         status: 422,
-        code: 'E_VALIDATION',
+        code: ERROR_CODES[422],
         message: err.message,
         errors: err.errors,
       }, 422)
     }
 
     // Handle errors with status codes
+    const fallbackCode = getErrorCode(500)
     if (status === 401) {
       return c.json({
         status: 401,
-        code: httpError.code ?? 'E_UNAUTHORIZED',
+        code: httpError.code ?? getErrorCode(401, fallbackCode),
         message: err.message || 'Unauthorized',
       }, 401)
     }
@@ -96,7 +98,7 @@ export function createErrorHandler(options: ErrorHandlerOptions = {}): ErrorHand
     if (status === 403) {
       return c.json({
         status: 403,
-        code: httpError.code ?? 'E_FORBIDDEN',
+        code: httpError.code ?? getErrorCode(403, fallbackCode),
         message: err.message || 'Forbidden',
       }, 403)
     }
@@ -104,7 +106,7 @@ export function createErrorHandler(options: ErrorHandlerOptions = {}): ErrorHand
     if (status === 404) {
       return c.json({
         status: 404,
-        code: httpError.code ?? 'E_NOT_FOUND',
+        code: httpError.code ?? getErrorCode(404, fallbackCode),
         message: err.message || 'Not Found',
       }, 404)
     }
@@ -112,7 +114,7 @@ export function createErrorHandler(options: ErrorHandlerOptions = {}): ErrorHand
     if (status === 409) {
       return c.json({
         status: 409,
-        code: httpError.code ?? 'E_CONFLICT',
+        code: httpError.code ?? getErrorCode(409, fallbackCode),
         message: err.message || 'Conflict',
       }, 409)
     }
@@ -120,7 +122,7 @@ export function createErrorHandler(options: ErrorHandlerOptions = {}): ErrorHand
     if (status === 429) {
       return c.json({
         status: 429,
-        code: httpError.code ?? 'E_RATE_LIMITED',
+        code: httpError.code ?? getErrorCode(429, fallbackCode),
         message: err.message || 'Too Many Requests',
       }, 429)
     }
@@ -128,7 +130,7 @@ export function createErrorHandler(options: ErrorHandlerOptions = {}): ErrorHand
     // Default: Internal Server Error
     const errorResponse: Record<string, unknown> = {
       status: 500,
-      code: httpError.code ?? 'E_INTERNAL',
+      code: httpError.code ?? getErrorCode(500, fallbackCode),
       message: isDev ? err.message : 'Internal Server Error',
     }
 

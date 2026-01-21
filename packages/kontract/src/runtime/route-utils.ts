@@ -15,9 +15,19 @@ export type { RouteString } from '../metadata/types.js'
  * Parse a route string into method and path.
  */
 export function parseRouteString(route: RouteString): [string, string] {
-  const spaceIndex = route.indexOf(' ')
-  const method = route.slice(0, spaceIndex).toLowerCase()
-  const path = route.slice(spaceIndex + 1)
+  return parseRouteStringStrict(route)
+}
+
+/**
+ * Parse and validate a route string into method and path.
+ */
+export function parseRouteStringStrict(route: RouteString): [string, string] {
+  const match = /^(GET|POST|PUT|PATCH|DELETE) (\/.+)$/.exec(route)
+  if (!match) {
+    throw new Error(`Invalid route string "${route}". Expected "METHOD /path".`)
+  }
+  const method = match[1].toLowerCase()
+  const path = match[2]
   return [method, path]
 }
 

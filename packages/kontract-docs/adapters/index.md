@@ -157,6 +157,8 @@ registerController(app, usersController, {
 registerController(router, usersController)
 ```
 
+Note: when `auth: 'optional'`, only authentication/authorization errors (401/403) are suppressed. Other errors thrown by `authenticate` will propagate to error handlers.
+
 ## OpenAPI Generation
 
 All adapters provide a way to build the OpenAPI spec from controllers:

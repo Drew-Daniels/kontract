@@ -27,6 +27,7 @@ import {
   parseRouteString,
   normalizeResponses,
   isApiResponse,
+  isAuthError,
 } from 'kontract'
 
 /**
@@ -489,8 +490,10 @@ function createHandler(
     } else if (route.config.auth === 'optional' && authenticate) {
       try {
         user = await authenticate(c)
-      } catch {
-        // Ignore auth errors for optional auth
+      } catch (err) {
+        if (!isAuthError(err)) {
+          throw err
+        }
       }
     }
 
@@ -499,7 +502,7 @@ function createHandler(
     let query: unknown
     let params: unknown
 
-    if (route.config.body) {
+    if (route.config.body && !route.config.multipart) {
       const rawBody = await c.req.json()
       body = validate(route.config.body, rawBody)
     }

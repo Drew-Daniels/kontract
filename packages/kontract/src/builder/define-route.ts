@@ -142,9 +142,12 @@ export interface RouteDefinition<
  * Parse a route string into method and path.
  */
 function parseRoute(route: RouteString): [HttpMethod, string] {
-  const spaceIndex = route.indexOf(' ')
-  const method = route.slice(0, spaceIndex).toLowerCase() as HttpMethod
-  const path = route.slice(spaceIndex + 1)
+  const match = /^(GET|POST|PUT|PATCH|DELETE) (\/.+)$/.exec(route)
+  if (!match) {
+    throw new Error(`Invalid route string "${route}". Expected "METHOD /path".`)
+  }
+  const method = match[1].toLowerCase() as HttpMethod
+  const path = match[2]
   return [method, path]
 }
 

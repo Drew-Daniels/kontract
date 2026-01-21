@@ -1,5 +1,6 @@
 import type { Context, Next, Middleware } from 'koa'
 import { AjvValidationError } from '@kontract/ajv'
+import { ERROR_CODES, getErrorCode } from 'kontract'
 
 /**
  * Error with HTTP status code.
@@ -89,7 +90,7 @@ export function createErrorHandler(options: ErrorHandlerOptions = {}): Middlewar
         ctx.status = 422
         ctx.body = {
           status: 422,
-          code: 'E_VALIDATION',
+          code: ERROR_CODES[422],
           message: error.message,
           errors: error.errors,
         }
@@ -97,11 +98,12 @@ export function createErrorHandler(options: ErrorHandlerOptions = {}): Middlewar
       }
 
       // Handle errors with status codes
+      const fallbackCode = getErrorCode(500)
       if (status === 401) {
         ctx.status = 401
         ctx.body = {
           status: 401,
-          code: error.code ?? 'E_UNAUTHORIZED',
+          code: error.code ?? getErrorCode(401, fallbackCode),
           message: error.message || 'Unauthorized',
         }
         return
@@ -111,7 +113,7 @@ export function createErrorHandler(options: ErrorHandlerOptions = {}): Middlewar
         ctx.status = 403
         ctx.body = {
           status: 403,
-          code: error.code ?? 'E_FORBIDDEN',
+          code: error.code ?? getErrorCode(403, fallbackCode),
           message: error.message || 'Forbidden',
         }
         return
@@ -121,7 +123,7 @@ export function createErrorHandler(options: ErrorHandlerOptions = {}): Middlewar
         ctx.status = 404
         ctx.body = {
           status: 404,
-          code: error.code ?? 'E_NOT_FOUND',
+          code: error.code ?? getErrorCode(404, fallbackCode),
           message: error.message || 'Not Found',
         }
         return
@@ -131,7 +133,7 @@ export function createErrorHandler(options: ErrorHandlerOptions = {}): Middlewar
         ctx.status = 409
         ctx.body = {
           status: 409,
-          code: error.code ?? 'E_CONFLICT',
+          code: error.code ?? getErrorCode(409, fallbackCode),
           message: error.message || 'Conflict',
         }
         return
@@ -141,7 +143,7 @@ export function createErrorHandler(options: ErrorHandlerOptions = {}): Middlewar
         ctx.status = 429
         ctx.body = {
           status: 429,
-          code: error.code ?? 'E_RATE_LIMITED',
+          code: error.code ?? getErrorCode(429, fallbackCode),
           message: error.message || 'Too Many Requests',
         }
         return
@@ -150,7 +152,7 @@ export function createErrorHandler(options: ErrorHandlerOptions = {}): Middlewar
       // Default: Internal Server Error
       const errorResponse: Record<string, unknown> = {
         status: 500,
-        code: error.code ?? 'E_INTERNAL',
+        code: error.code ?? getErrorCode(500, fallbackCode),
         message: isDev ? error.message : 'Internal Server Error',
       }
 

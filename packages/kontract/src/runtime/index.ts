@@ -36,6 +36,7 @@ export type {
 // Response helpers
 export {
   ERROR_CODES,
+  getErrorCode,
   createSuccessHelper,
   createErrorHelper,
   getErrorMessage,
@@ -46,7 +47,11 @@ export {
 export type { RouteString } from './route-utils.js'
 export {
   parseRouteString,
+  parseRouteStringStrict,
   normalizeResponses,
   isApiResponse,
   noContent,
 } from './route-utils.js'
+
+// Auth utilities
+export { isAuthError } from './auth-utils.js'
